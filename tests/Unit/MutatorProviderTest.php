@@ -4,14 +4,14 @@ namespace Weebly\Mutator;
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
-use Weebly\Mutate\Mutators\AbstractMutator;
+use Weebly\Mutate\Mutators\MutatorContract;
 use Weebly\Mutate\MutatorProvider;
 
 class MutatorProviderTest extends TestCase
 {
     public function testGet()
     {
-        $mutator = M::mock(AbstractMutator::class);
+        $mutator = M::mock(MutatorContract::class);
 
         $provider = new MutatorProvider();
         $provider->set('test_mutator', $mutator);
@@ -21,7 +21,7 @@ class MutatorProviderTest extends TestCase
 
     public function testSet()
     {
-        $mutator = M::mock(AbstractMutator::class);
+        $mutator = M::mock(MutatorContract::class);
 
         $provider = new MutatorProvider();
         $this->assertSame($provider, $provider->set('test_mutator', $mutator));
@@ -29,7 +29,7 @@ class MutatorProviderTest extends TestCase
 
     public function testExists()
     {
-        $mutator = M::mock(AbstractMutator::class);
+        $mutator = M::mock(MutatorContract::class);
 
         $provider = new MutatorProvider();
         $provider->set('test_mutator', $mutator);
@@ -48,7 +48,7 @@ class MutatorProviderTest extends TestCase
     public function testOffsetExists()
     {
         $provider = new MutatorProvider();
-        $provider->set('test_mutator', M::mock(AbstractMutator::class));
+        $provider->set('test_mutator', M::mock(MutatorContract::class));
 
         $this->assertTrue(isset($provider['test_mutator']));
     }
@@ -56,7 +56,7 @@ class MutatorProviderTest extends TestCase
     public function testOffsetGet()
     {
         $provider = new MutatorProvider();
-        $provider->set('test_mutator', M::mock(AbstractMutator::class));
+        $provider->set('test_mutator', M::mock(MutatorContract::class));
 
         $this->assertTrue(isset($provider['test_mutator']));
     }
@@ -64,7 +64,7 @@ class MutatorProviderTest extends TestCase
     public function testOffsetSet()
     {
         $provider = new MutatorProvider();
-        $provider['test_mutator'] = M::mock(AbstractMutator::class);
+        $provider['test_mutator'] = M::mock(MutatorContract::class);
 
         $this->assertTrue(isset($provider['test_mutator']));
     }
@@ -72,7 +72,7 @@ class MutatorProviderTest extends TestCase
     public function testOffsetUnset()
     {
         $provider = new MutatorProvider();
-        $provider->set('test_mutator', M::mock(AbstractMutator::class));
+        $provider->set('test_mutator', M::mock(MutatorContract::class));
 
         unset($provider['test_mutator']);
 
@@ -80,13 +80,8 @@ class MutatorProviderTest extends TestCase
     }
 }
 
-class SampleMutator extends AbstractMutator
+class SampleMutator implements MutatorContract
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $name = 'test_mutator';
-
     /**
      * @inheritDoc
      */

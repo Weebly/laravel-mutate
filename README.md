@@ -62,14 +62,14 @@ this package will serialize the attribute values when they are passed to an Eloq
 Creating Custom Mutators
 ------------------------
 
-To define a custom mutator, you'll need to create a class that extends
-`Weebly\Mutate\Mutators\AbstractMutator`, and add it to the `enabled` array in `config/mutators.php`.
+To define a custom mutator, you'll need to create a class that implements
+`Weebly\Mutate\Mutators\MutatorContract`, and add it to the `enabled` array in `config/mutators.php`.
 
 > **Note:** All attributes are cached on a model instance automatically, so you should not need to add
 any caching logic at the mutator level.
 
 When building and registering a Mutator, it is important to know that they
-are resolved from the Laravel IOC container, which means you may create 
+are resolved automatically from the Laravel IOC container, which means you may create 
 service providers for them if they require custom constructor arguments.
 
 ```php
@@ -77,15 +77,10 @@ service providers for them if they require custom constructor arguments.
 
 namespace App\Mutators;
 
-use Weebly\Mutate\Mutators\AbstractMutator;
+use Weebly\Mutate\Mutators\MutatorContract;
 
-class ExampleEncryptMutator extends AbstractMutator
+class ExampleEncryptMutator implements MutatorContract
 {
-    /**
-     * {@inheritDoc}
-     */
-    protected $name = 'encrypt';
-
     /**
      * {@inheritDoc}
      */

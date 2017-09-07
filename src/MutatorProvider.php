@@ -3,8 +3,8 @@
 namespace Weebly\Mutate;
 
 use ArrayAccess;
-use Weebly\Mutate\Mutators\AbstractMutator;
 use Weebly\Mutate\Exceptions\MutatorNotFoundException;
+use Weebly\Mutate\Mutators\MutatorContract;
 
 class MutatorProvider implements ArrayAccess
 {
@@ -15,14 +15,14 @@ class MutatorProvider implements ArrayAccess
 
     /**
      * @param string $mutator
-     * @return \Weebly\Mutate\Mutators\AbstractMutator
+     * @return \Weebly\Mutate\Mutators\MutatorContract
      * @throws \Weebly\Mutate\Exceptions\MutatorNotFoundException
      */
     public function get($mutator)
     {
         if ($this->exists($mutator)) {
             $mutator = $this->mutators[$mutator];
-            $mutator = (! $mutator instanceof AbstractMutator) ? app($mutator) : $mutator;
+            $mutator = (! $mutator instanceof MutatorContract) ? app($mutator) : $mutator;
 
             return $mutator;
         }
@@ -73,7 +73,7 @@ class MutatorProvider implements ArrayAccess
 
     /**
      * @param string $offset
-     * @return \Weebly\Mutate\Mutators\AbstractMutator
+     * @return \Weebly\Mutate\Mutators\MutatorContract
      * @throws \Weebly\Mutate\Exceptions\MutatorNotFoundException
      */
     public function offsetGet($offset)
@@ -101,7 +101,7 @@ class MutatorProvider implements ArrayAccess
 
     /**
      * @param string $name
-     * @return \Weebly\Mutate\Mutators\AbstractMutator
+     * @return \Weebly\Mutate\Mutators\MutatorContract
      * @throws \Weebly\Mutate\Exceptions\MutatorNotFoundException
      */
     public function __get($name)

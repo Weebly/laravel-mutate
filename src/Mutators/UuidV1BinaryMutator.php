@@ -3,12 +3,10 @@
 namespace Weebly\Mutate\Mutators;
 
 use Exception;
-use InvalidArgumentException;
-use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Ramsey\Uuid\Uuid;
 use Weebly\Mutate\Exceptions\MutateException;
 
-class UuidV1BinaryMutator extends AbstractMutator
+class UuidV1BinaryMutator implements MutatorContract
 {
     /**
      * {@inheritDoc}

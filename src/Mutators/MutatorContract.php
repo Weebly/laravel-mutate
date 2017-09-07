@@ -2,16 +2,16 @@
 
 namespace Weebly\Mutate\Mutators;
 
-abstract class AbstractMutator
+interface MutatorContract
 {
     /**
      * @param mixed $value
      */
-    abstract public function serializeAttribute($value);
+    public function serializeAttribute($value);
 
     /**
      * @param mixed $value
      * @return mixed
      */
-    abstract public function unserializeAttribute($value);
+    public function unserializeAttribute($value);
 }

@@ -2,7 +2,7 @@
 
 namespace Weebly\Mutate\Mutators;
 
-class IpBinaryMutator extends AbstractMutator
+class IpBinaryMutator implements MutatorContract
 {
     /**
      * @param mixed $value

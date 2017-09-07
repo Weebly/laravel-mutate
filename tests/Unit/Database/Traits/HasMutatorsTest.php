@@ -4,14 +4,14 @@ namespace Weebly\Mutate\Database;
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
-use Weebly\Mutate\Mutators\AbstractMutator;
+use Weebly\Mutate\Mutators\MutatorContract;
 
 class HasMutatorsTest extends TestCase
 {
     public function testSerializeAttribute()
     {
         $uuid    = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
-        $mutator = M::mock(AbstractMutator::class)
+        $mutator = M::mock(MutatorContract::class)
             ->shouldReceive('get')
             ->with('test_mutator')
             ->andReturnSelf()
@@ -32,7 +32,7 @@ class HasMutatorsTest extends TestCase
     public function testUnserializeAttribute()
     {
         $uuid    = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
-        $mutator = M::mock(AbstractMutator::class)
+        $mutator = M::mock(MutatorContract::class)
             ->shouldReceive('get')
             ->with('test_mutator')
             ->andReturnSelf()
