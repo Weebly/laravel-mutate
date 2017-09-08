@@ -51,6 +51,13 @@ class MutatorTest extends TestCase
         });
 
         DB::connection()->getPdo()->exec('ALTER TABLE test_model ADD id BINARY(16);');
+
+        Schema::create('timestamped_model', function ($table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->integer('created_at');
+            $table->integer('updated_at');
+        });
     }
 
     public function test_where()
@@ -118,6 +125,18 @@ class MutatorTest extends TestCase
         $ids = TestModel::where('id', $id)->pluck('id', 'location')->toArray();
         $this->assertEquals([$location => $id], $ids);
     }
+
+    public function test_timestamps()
+    {
+        (new TimestampedModel())->create(['name' => 'Model']);
+        $model = TimestampedModel::first();
+        $this->assertInstanceOf('Carbon\Carbon', $model->created_at);
+        $this->assertInstanceOf('Carbon\Carbon', $model->updated_at);
+
+        $values = \DB::table('timestamped_model')->first();
+        $this->assertTrue(ctype_digit($values->created_at));
+        $this->assertTrue(ctype_digit($values->updated_at));
+    }
 }
 
 class TestModel extends Model
@@ -153,5 +172,17 @@ class TestModel extends Model
     protected $mutate = [
         'id'       => 'uuid_v1_binary',
         'location' => 'encrypt_string',
+    ];
+}
+
+class TimestampedModel extends Model
+{
+    protected $table = 'timestamped_model';
+
+    protected $guarded = [];
+
+    protected $mutate = [
+        'created_at' => 'unix_timestamp',
+        'updated_at' => 'unix_timestamp',
     ];
 }
