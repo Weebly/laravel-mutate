@@ -10,7 +10,7 @@ class HasMutatorsTest extends TestCase
 {
     public function testSerializeAttribute()
     {
-        $uuid    = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
+        $uuid = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
         $mutator = M::mock(MutatorContract::class)
             ->shouldReceive('get')
             ->with('test_mutator')
@@ -31,7 +31,7 @@ class HasMutatorsTest extends TestCase
 
     public function testUnserializeAttribute()
     {
-        $uuid    = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
+        $uuid = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
         $mutator = M::mock(MutatorContract::class)
             ->shouldReceive('get')
             ->with('test_mutator')
@@ -72,26 +72,26 @@ class HasMutatorsTest extends TestCase
 class SampleModel extends Model
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $mutate = [
         'id' => 'test_mutator',
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $attributes = [
         'id' => 'unserialized_attribute',
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $keyType = 'string';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public $incrementing = false;
 }

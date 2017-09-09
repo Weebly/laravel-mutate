@@ -2,8 +2,8 @@
 
 namespace Weebly\Mutate\Database;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 use Weebly\Mutate\Database\Traits\HasMutators;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 abstract class Model extends Eloquent
 {
@@ -23,7 +23,7 @@ abstract class Model extends Eloquent
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setAttribute($key, $value)
     {
@@ -38,7 +38,7 @@ abstract class Model extends Eloquent
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function attributesToArray()
     {
@@ -54,7 +54,7 @@ abstract class Model extends Eloquent
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function newEloquentBuilder($query)
     {
@@ -62,7 +62,7 @@ abstract class Model extends Eloquent
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getKeyForSaveQuery()
     {

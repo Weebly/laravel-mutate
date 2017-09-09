@@ -4,8 +4,8 @@ namespace Weebly\Mutator;
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
-use Weebly\Mutate\Mutators\MutatorContract;
 use Weebly\Mutate\MutatorProvider;
+use Weebly\Mutate\Mutators\MutatorContract;
 
 class MutatorProviderTest extends TestCase
 {
@@ -83,18 +83,16 @@ class MutatorProviderTest extends TestCase
 class SampleMutator implements MutatorContract
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function serializeAttribute($value)
     {
-        return;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function unserializeAttribute($value)
     {
-        return;
     }
 }
