@@ -2,8 +2,8 @@
 
 namespace Weebly\Mutate\Mutators;
 
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\Encrypter;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class EncryptStringMutator implements MutatorContract
 {
@@ -21,26 +21,24 @@ class EncryptStringMutator implements MutatorContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serializeAttribute($value)
     {
         try {
             return $this->encrypt->encrypt($value, false);
-        } catch (DecryptException $e) {}
-
-        return null;
+        } catch (DecryptException $e) {
+        }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unserializeAttribute($value)
     {
         try {
             return $this->encrypt->decrypt($value, false);
-        } catch (DecryptException $e) {}
-
-        return null;
+        } catch (DecryptException $e) {
+        }
     }
 }

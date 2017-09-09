@@ -2,7 +2,7 @@
 
 return [
     'enabled' => [
-        /**
+        /*
          * Eloquent mutator providers...
          */
         'uuid_v1_binary' => \Weebly\Mutate\Mutators\UuidV1BinaryMutator::class,

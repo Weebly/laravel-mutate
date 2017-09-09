@@ -2,4 +2,6 @@
 
 namespace Weebly\Mutate\Exceptions;
 
-class MutateException extends \Exception {}
+class MutateException extends \Exception
+{
+}

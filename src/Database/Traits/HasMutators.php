@@ -80,8 +80,6 @@ trait HasMutators
         if ($this->hasMutator($attribute)) {
             return $this->mutate[$attribute];
         }
-
-        return null;
     }
 
     /**

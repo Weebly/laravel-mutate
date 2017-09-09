@@ -8,22 +8,22 @@ use Illuminate\Support\ServiceProvider;
 class LaravelMutatorServiceProvider extends ServiceProvider
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/config.php' => config_path('mutators.php')
+            __DIR__.'/../config/config.php' => config_path('mutators.php'),
         ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function register()
     {
         $this->app->singleton('mutator', function (Application $app) {
-            $mutator  = new MutatorProvider();
+            $mutator = new MutatorProvider();
             $mutator->registerMutators($app['config']->get('mutators.enabled'));
 
             return $mutator;

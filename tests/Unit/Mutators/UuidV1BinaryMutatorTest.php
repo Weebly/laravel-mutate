@@ -49,15 +49,15 @@ class UuidV1BinaryMutatorTest extends TestCase
         return [
             'uuidv1 hex with dashes' => [
                 '61d10c04-86c5-11e7-b2db-807de02e3838',          // UUID
-                hex2bin('11e786c561d10c04b2db807de02e3838') // Expected
+                hex2bin('11e786c561d10c04b2db807de02e3838'), // Expected
             ],
             'uuidv1 hex without dashes' => [
                 '61d10c0486c511e7b2db807de02e3838',
-                hex2bin('11e786c561d10c04b2db807de02e3838')
+                hex2bin('11e786c561d10c04b2db807de02e3838'),
             ],
             'uuidv1 binary' => [
                 hex2bin('61d10c0486c511e7b2db807de02e3838'),
-                hex2bin('11e786c561d10c04b2db807de02e3838')
+                hex2bin('11e786c561d10c04b2db807de02e3838'),
             ],
         ];
     }
@@ -119,7 +119,7 @@ class UuidV1BinaryMutatorTest extends TestCase
             'uuidv4' => [
                 'b86d458c-a811-478b-96d6-ba41c8fdbab8',
                 MutateException::class,
-                'Incorrect UUID version'
+                'Incorrect UUID version',
             ],
             'uuidv4 hex without dashes' => [
                 'b86d458ca811478b96d6ba41c8fdbab8',
