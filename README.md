@@ -1,6 +1,8 @@
 Eloquent Mutators
 =================
 
+[![CircleCI](https://circleci.com/gh/Weebly/laravel-mutate.svg?style=svg)](https://circleci.com/gh/Weebly/laravel-mutate)
+
 Installing
 ----------
 
