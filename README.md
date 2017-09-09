@@ -2,6 +2,7 @@ Eloquent Mutators
 =================
 
 [![CircleCI](https://circleci.com/gh/Weebly/laravel-mutate.svg?style=svg)](https://circleci.com/gh/Weebly/laravel-mutate)
+[![StyleCI](https://styleci.io/repos/102659341/shield?branch=master)](https://styleci.io/repos/102659341)
 
 Installing
 ----------
@@ -41,12 +42,12 @@ use Weebly\Mutate\Database\Model;
 class User extends Model
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'users';
     
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $mutate = [
         'id' => 'uuid_v1_binary'
@@ -84,7 +85,7 @@ use Weebly\Mutate\Mutators\MutatorContract;
 class ExampleEncryptMutator implements MutatorContract
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serializeAttribute($value)
     {
@@ -92,7 +93,7 @@ class ExampleEncryptMutator implements MutatorContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unserializeAttribute($value)
     {
