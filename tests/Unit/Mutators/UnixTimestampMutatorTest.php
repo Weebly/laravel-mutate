@@ -39,6 +39,7 @@ class UnixTimestampMutatorTest extends TestCase
     public function carbonProvider()
     {
         $now = time();
+
         return [
             [Carbon::createFromTimestamp($now), $now],
             [Carbon::createFromTimestamp(1), 1],

@@ -3,7 +3,7 @@
 namespace Weebly\Mutate\Mutators;
 
 use PHPUnit\Framework\TestCase;
-use \stdClass;
+use stdClass;
 
 class HexBinaryMutatorTest extends TestCase
 {
@@ -44,7 +44,7 @@ class HexBinaryMutatorTest extends TestCase
             '5d87fca1c8f5c2ec21',
             'c334821e50532bd40227',
         ];
-        return array_map(function($hex) {
+        return array_map(function ($hex) {
             return [$hex, hex2bin($hex)];
         }, $hexes);
     }
