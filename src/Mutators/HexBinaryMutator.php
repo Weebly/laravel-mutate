@@ -15,7 +15,7 @@ class HexBinaryMutator implements MutatorContract
      */
     public function serializeAttribute($value)
     {
-        if (!\ctype_xdigit($value)) {
+        if (!ctype_xdigit($value)) {
 
             throw new MutateException(__METHOD__." expects the value to be serialized to be a hexadecimal string.");
         }
