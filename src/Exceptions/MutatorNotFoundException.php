@@ -2,4 +2,6 @@
 
 namespace Weebly\Mutate\Exceptions;
 
-class MutatorNotFoundException extends MutateException {}
+class MutatorNotFoundException extends MutateException
+{
+}

@@ -2,8 +2,8 @@
 
 namespace Weebly\Mutate\Database;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class EloquentBuilder extends Builder
 {
@@ -13,7 +13,7 @@ class EloquentBuilder extends Builder
     protected $model;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
@@ -23,13 +23,13 @@ class EloquentBuilder extends Builder
         }
 
         $mutatedColumn = $this->getUnqualifiedColumnName($column);
-        $value  = $this->model->serializeAttribute($mutatedColumn, $value);
+        $value = $this->model->serializeAttribute($mutatedColumn, $value);
 
         return parent::where($mutatedColumn, $operator, $value, $boolean);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function whereIn($column, $values, $boolean = 'and', $not = false)
     {
@@ -44,7 +44,7 @@ class EloquentBuilder extends Builder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function update(array $values)
     {
@@ -65,7 +65,7 @@ class EloquentBuilder extends Builder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function pluck($column, $key = null)
     {
@@ -74,14 +74,15 @@ class EloquentBuilder extends Builder
 
         $model = $this->model;
         if (is_null($key)) {
-            $mutatedValues = $values->map(function($v) use ($model, $mutatedColumn) {
+            $mutatedValues = $values->map(function ($v) use ($model, $mutatedColumn) {
                 return $model->unserializeAttribute($mutatedColumn, $v);
             });
         } else {
-            $mutatedValues = $values->mapWithKeys(function($v, $k) use ($model, $mutatedColumn, $key) {
+            $mutatedValues = $values->mapWithKeys(function ($v, $k) use ($model, $mutatedColumn, $key) {
                 return [$model->unserializeAttribute($key, $k) => $model->unserializeAttribute($mutatedColumn, $v)];
             });
         }
+
         return $mutatedValues;
     }
 
@@ -96,6 +97,7 @@ class EloquentBuilder extends Builder
         if (Str::contains($column, '.')) {
             return Str::after($column, '.');
         }
+
         return $column;
     }
 }

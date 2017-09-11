@@ -1,15 +1,20 @@
 Eloquent Mutators
 =================
 
+[![License](https://img.shields.io/packagist/l/Weebly/laravel-mutate.svg)](https://packagist.org/packages/weebly/laravel-mutate)
+[![Latest Stable Version](https://img.shields.io/packagist/v/Weebly/laravel-mutate.svg)](https://packagist.org/packages/weebly/laravel-mutate)
+[![StyleCI](https://styleci.io/repos/102659341/shield?branch=master)](https://styleci.io/repos/102659341)
+[![CircleCI](https://circleci.com/gh/Weebly/laravel-mutate/tree/master.svg?style=shield)](https://circleci.com/gh/Weebly/laravel-mutate)
+
 Installing
 ----------
 
 ```bash
-$ composer require weebly/laravel-mutate
+$ composer require weebly/laravel-mutate:v1.0.0
 ```
 
 To use this package, you'll need to add the `ServiceProvider` to the providers array
-in `config/app.php`
+in `config/app.php` if you are not using automatic package discovery:
 
 ```php
 Weebly\Mutate\LaravelMutatorServiceProvider::class
@@ -39,12 +44,12 @@ use Weebly\Mutate\Database\Model;
 class User extends Model
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'users';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $mutate = [
         'id' => 'uuid_v1_binary'
@@ -91,7 +96,7 @@ use Weebly\Mutate\Mutators\MutatorContract;
 class ExampleEncryptMutator implements MutatorContract
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serializeAttribute($value)
     {
@@ -99,7 +104,7 @@ class ExampleEncryptMutator implements MutatorContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unserializeAttribute($value)
     {
@@ -116,3 +121,8 @@ Running tests:
 ```bash
 $ ./vendor/bin/phpunit
 ```
+
+License
+-------
+
+This package is open-sourced software licensed under the [2-Clause BSD](https://opensource.org/licenses/BSD-2-Clause) license.

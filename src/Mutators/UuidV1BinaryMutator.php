@@ -9,7 +9,7 @@ use Weebly\Mutate\Exceptions\MutateException;
 class UuidV1BinaryMutator implements MutatorContract
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serializeAttribute($value)
     {
@@ -40,12 +40,12 @@ class UuidV1BinaryMutator implements MutatorContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unserializeAttribute($value)
     {
-        if (!$value) {
-            return null;
+        if (! $value) {
+            return;
         }
 
         // Convert to hex
@@ -64,12 +64,12 @@ class UuidV1BinaryMutator implements MutatorContract
             /** @var \Ramsey\Uuid\Uuid $uuid */
             $uuid = Uuid::getFactory()->fromString($uuid);
         } catch (Exception $e) {
-            return null;
+            return;
         }
 
         // Validate the UUID version
         if ($uuid->getVersion() !== 1) {
-            return null;
+            return;
         }
 
         return $uuid->toString();
