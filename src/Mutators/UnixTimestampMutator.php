@@ -19,7 +19,7 @@ class UnixTimestampMutator implements MutatorContract
         if (!$value instanceof Carbon) {
             throw new MutateException(__METHOD__." expects a Carbon\Carbon value. Received: ". print_r($value, true));
         }
-        return $value->timestamp;;
+        return $value->timestamp;
     }
 
     /**
