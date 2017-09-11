@@ -3,6 +3,7 @@
 namespace Weebly\Mutate\Mutators;
 
 use PHPUnit\Framework\TestCase;
+use \stdClass;
 
 class HexBinaryMutatorTest extends TestCase
 {
@@ -31,10 +32,21 @@ class HexBinaryMutatorTest extends TestCase
      */
     public function hexProvider()
     {
-        for ($i = 0; $i < 10; $i++) {
-            $bytes = random_bytes(20);
-            yield [bin2hex($bytes), $bytes];
-        }
+        $hexes = [
+            'e7',
+            '232f',
+            '0b76e0',
+            '65c1b7b0',
+            'e2f9995c0b',
+            'cfc46177b9cd',
+            '01f4890a5996c1',
+            'd8d3a96d2a441b39',
+            '5d87fca1c8f5c2ec21',
+            'c334821e50532bd40227',
+        ];
+        return array_map(function($hex) {
+            return [$hex, hex2bin($hex)];
+        }, $hexes);
     }
 
     /**
@@ -53,11 +65,13 @@ class HexBinaryMutatorTest extends TestCase
     public function notHexProvider()
     {
         return [
-            [new \stdClass],
-            [0],
-            [base64_encode(random_bytes(20))],
-            [null],
-            [true],
+            [new stdClass], // Cannot serialize an object
+            [0], // Cannot serialize an int
+            [0.3], // Cannot serialize a float
+            ['YzMzNDgyMWU1MDUzMmJkNDAy'], // Can't serialize a string that contains non-hex digits
+            [null], // Null cannot pass
+            [true], // Bools also not ok as hex data
+            ['a'], // Length must be even for a hex string to be representing bytes
          ];
     }
 }

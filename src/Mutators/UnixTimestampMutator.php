@@ -28,7 +28,7 @@ class UnixTimestampMutator implements MutatorContract
      */
     public function unserializeAttribute($value)
     {
-        if (! $value) {
+        if (! is_int($value) && !ctype_digit($value)) {
             return;
         }
 
