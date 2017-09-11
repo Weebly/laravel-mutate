@@ -41,11 +41,11 @@ class UnixTimestampMutatorTest extends TestCase
         $now = time();
 
         return [
-            [Carbon::createFromTimestamp($now), $now],
-            [Carbon::createFromTimestamp(1), 1],
-            [Carbon::createFromTimestamp(pow(2, 32) - 1), pow(2, 32) - 1],
-            [Carbon::createFromTimestamp(-200), -200],
-            [Carbon::createFromTimestamp(0), 0],
+            'Now' => [Carbon::createFromTimestamp($now), $now],
+            'Timestamp 1' => [Carbon::createFromTimestamp(1), 1],
+            'Timestamp for max uint32' => [Carbon::createFromTimestamp(pow(2, 32) - 1), pow(2, 32) - 1],
+            'Negative timestamp' => [Carbon::createFromTimestamp(-200), -200],
+            'Timestamp 0' => [Carbon::createFromTimestamp(0), 0],
         ];
     }
 }

@@ -33,21 +33,23 @@ class HexBinaryMutatorTest extends TestCase
     public function hexProvider()
     {
         $hexes = [
-            'e7',
-            '232f',
-            '0b76e0',
-            '65c1b7b0',
-            'e2f9995c0b',
-            'cfc46177b9cd',
-            '01f4890a5996c1',
-            'd8d3a96d2a441b39',
-            '5d87fca1c8f5c2ec21',
-            'c334821e50532bd40227',
+            'Hex string of length 2' => 'e7',
+            'Hex string of length 4' => '232f',
+            'Hex string of length 6' => '0b76e0',
+            'Hex string of length 8' => '65c1b7b0',
+            'Hex string of length 10' => 'e2f9995c0b',
+            'Hex string of length 12' => 'cfc46177b9cd',
+            'Hex string of length 14' => '01f4890a5996c1',
+            'Hex string of length 16' => 'd8d3a96d2a441b39',
+            'Hex string of length 18' => '5d87fca1c8f5c2ec21',
+            'Hex string of length 20' => 'c334821e50532bd40227',
         ];
 
-        return array_map(function ($hex) {
-            return [$hex, hex2bin($hex)];
-        }, $hexes);
+        foreach ($hexes as $label => $hex) {
+            $hexes[$label] = [$hex, hex2bin($hex)];
+        }
+
+        return $hexes;
     }
 
     /**
@@ -66,13 +68,13 @@ class HexBinaryMutatorTest extends TestCase
     public function notHexProvider()
     {
         return [
-            [new stdClass], // Cannot serialize an object
-            [0], // Cannot serialize an int
-            [0.3], // Cannot serialize a float
-            ['YzMzNDgyMWU1MDUzMmJkNDAy'], // Can't serialize a string that contains non-hex digits
-            [null], // Null cannot pass
-            [true], // Bools also not ok as hex data
-            ['a'], // Length must be even for a hex string to be representing bytes
+            'An object cannot be serialized' => [new stdClass],
+            'An int cannot be serialized' => [0],
+            'Floats cannot be serialized' => [0.3],
+            'Only hex strings can be serialiazed' => ['YzMzNDgyMWU1MDUzMmJkNDAy'],
+            'Null cannot be serialized' => [null],
+            'Boolas cannot be serialized' => [true],
+            'Hex strings should have even lengths to be valid bytes representations' => ['a'],
          ];
     }
 }
