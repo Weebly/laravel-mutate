@@ -2,8 +2,8 @@
 
 namespace Weebly\Mutate\Mutators;
 
-use PHPUnit\Framework\TestCase;
 use stdClass;
+use PHPUnit\Framework\TestCase;
 
 class HexBinaryMutatorTest extends TestCase
 {
