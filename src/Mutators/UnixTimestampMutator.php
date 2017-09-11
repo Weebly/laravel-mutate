@@ -17,7 +17,7 @@ class UnixTimestampMutator implements MutatorContract
     public function serializeAttribute($value)
     {
         if (! $value instanceof Carbon) {
-            throw new MutateException(__METHOD__." expects a Carbon\Carbon value. Received: ". print_r($value, true));
+            throw new MutateException(__METHOD__." expects a Carbon\Carbon value. Received: ".print_r($value, true));
         }
         return $value->timestamp;
     }

@@ -38,7 +38,6 @@ class MutatorTest extends TestCase
 
             return $mutator;
         });
-
     }
 
     public function setUp()
