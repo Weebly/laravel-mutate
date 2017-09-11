@@ -2,9 +2,8 @@
 
 namespace Weebly\Mutate\Mutators;
 
-use PHPUnit\Framework\TestCase;
-use Weebly\Mutate\Exceptions\MutateException;
 use Carbon\Carbon;
+use PHPUnit\Framework\TestCase;
 
 class UnixTimestampMutatorTest extends TestCase
 {

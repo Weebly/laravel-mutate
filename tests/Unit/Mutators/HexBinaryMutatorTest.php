@@ -3,7 +3,6 @@
 namespace Weebly\Mutate\Mutators;
 
 use PHPUnit\Framework\TestCase;
-use Weebly\Mutate\Exceptions\MutateException;
 
 class HexBinaryMutatorTest extends TestCase
 {
@@ -53,7 +52,7 @@ class HexBinaryMutatorTest extends TestCase
      */
     public function notHexProvider()
     {
-         return [
+        return [
             [new \stdClass],
             [0],
             [base64_encode(random_bytes(20))],

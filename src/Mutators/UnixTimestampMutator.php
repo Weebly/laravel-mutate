@@ -12,23 +12,23 @@ use Weebly\Mutate\Exceptions\MutateException;
 class UnixTimestampMutator implements MutatorContract
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serializeAttribute($value)
     {
-        if (!$value instanceof Carbon) {
+        if (! $value instanceof Carbon) {
             throw new MutateException(__METHOD__." expects a Carbon\Carbon value. Received: ". print_r($value, true));
         }
         return $value->timestamp;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unserializeAttribute($value)
     {
-        if (!$value) {
-            return null;
+        if (! $value) {
+            return;
         }
         return Carbon::createFromTimestamp($value);
     }

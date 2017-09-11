@@ -3,11 +3,11 @@
 namespace Weebly\Mutate;
 
 use DB;
+use Ramsey\Uuid\Uuid;
+use Orchestra\Testbench\TestCase;
+use Weebly\Mutate\Database\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
-use Orchestra\Testbench\TestCase;
-use Ramsey\Uuid\Uuid;
-use Weebly\Mutate\Database\Model;
 
 /**
  * @group integration
@@ -30,8 +30,8 @@ class MutatorTest extends TestCase
         ]);
 
         $app->singleton('mutator', function (Application $app) {
-            $mutator  = new MutatorProvider();
-            $default_mutators = require(realpath(__DIR__.'/../../config/config.php'));
+            $mutator = new MutatorProvider();
+            $default_mutators = require realpath(__DIR__.'/../../config/config.php');
             $default_mutators = $default_mutators['enabled'];
 
             $mutator->registerMutators($default_mutators);
@@ -62,9 +62,9 @@ class MutatorTest extends TestCase
 
     public function test_where()
     {
-        $id    = Uuid::uuid1()->toString();
+        $id = Uuid::uuid1()->toString();
         $model = (new TestModel())->create(['id' => $id, 'name' => 'A table']);
-        $p     = $model->find($id);
+        $p = $model->find($id);
         $this->assertEquals($id, $p->id);
 
         $p = DB::table('test_model')->where('id', $id)->first();
@@ -73,33 +73,33 @@ class MutatorTest extends TestCase
 
     public function test_find()
     {
-        $id    = Uuid::uuid1()->toString();
+        $id = Uuid::uuid1()->toString();
         $model = (new TestModel())->create(['id' => $id, 'name' => 'A table']);
-        $p     = $model->find($id);
+        $p = $model->find($id);
         $this->assertEquals($id, $p->id);
     }
 
     public function test_non_mutated_columns()
     {
-        $id    = Uuid::uuid1()->toString();
+        $id = Uuid::uuid1()->toString();
         $model = (new TestModel())->create(['id' => $id, 'name' => 'abc']);
-        $p     = $model->where('name', 'abc')->first();
+        $p = $model->where('name', 'abc')->first();
         $this->assertEquals($id, $p->id);
     }
 
     public function test_where_in()
     {
-        $id    = Uuid::uuid1()->toString();
+        $id = Uuid::uuid1()->toString();
         $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
-        $p     = $model->whereIn('id', [$id])->first();
+        $p = $model->whereIn('id', [$id])->first();
         $this->assertEquals($id, $p->id);
     }
 
     public function test_update()
     {
-        $id    = Uuid::uuid1()->toString();
+        $id = Uuid::uuid1()->toString();
         $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo']);
-        $p1    = (new TestModel())->whereIn('id', [$id])->first();
+        $p1 = (new TestModel())->whereIn('id', [$id])->first();
 
         // Update the attribute
         $model->location = 'Bar';
@@ -142,35 +142,35 @@ class MutatorTest extends TestCase
 class TestModel extends Model
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'test_model';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $guarded = [];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public $timestamps = false;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public $incrementing = false;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $keyType = 'string';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $mutate = [
-        'id'       => 'uuid_v1_binary',
+        'id' => 'uuid_v1_binary',
         'location' => 'encrypt_string',
     ];
 }

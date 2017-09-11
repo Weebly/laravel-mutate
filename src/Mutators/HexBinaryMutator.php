@@ -11,24 +11,24 @@ use Weebly\Mutate\Exceptions\MutateException;
 class HexBinaryMutator implements MutatorContract
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serializeAttribute($value)
     {
-        if (!ctype_xdigit($value)) {
+        if (! ctype_xdigit($value)) {
 
-            throw new MutateException(__METHOD__." expects the value to be serialized to be a hexadecimal string.");
+            throw new MutateException(__METHOD__.' expects the value to be serialized to be a hexadecimal string.');
         }
         return hex2bin($value);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function unserializeAttribute($value)
     {
-        if (!$value) {
-            return null;
+        if (! $value) {
+            return;
         }
         return bin2hex($value);
     }
