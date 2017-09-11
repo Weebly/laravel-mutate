@@ -10,7 +10,7 @@ Installing
 ----------
 
 ```bash
-$ composer require weebly/laravel-mutate:v1.0.0
+$ composer require weebly/laravel-mutate
 ```
 
 To use this package, you'll need to add the `ServiceProvider` to the providers array
