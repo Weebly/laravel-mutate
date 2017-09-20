@@ -2,6 +2,7 @@
 
 namespace Weebly\Mutate\Database;
 
+use Closure;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -17,6 +18,10 @@ class EloquentBuilder extends Builder
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
+        if ($column instanceof Closure) {
+            return parent::where($column, $operator, $value, $boolean);
+        }
+
         if (func_num_args() === 2) {
             $value = $operator;
             $operator = '=';
