@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run: sudo apt install -y libsqlite3-dev
-      - run: composer self-update
+      - run: sudo composer self-update
       - restore_cache:
           keys:
             - composer-v1-{{ checksum "composer.json" }}

@@ -10,7 +10,7 @@ Installing
 ----------
 
 ```bash
-$ composer require weebly/laravel-mutate:v1.0.0
+$ composer require weebly/laravel-mutate
 ```
 
 To use this package, you'll need to add the `ServiceProvider` to the providers array
@@ -47,7 +47,7 @@ class User extends Model
      * {@inheritdoc}
      */
     protected $table = 'users';
-    
+
     /**
      * {@inheritdoc}
      */
@@ -59,10 +59,19 @@ class User extends Model
 
 This will automatically serialize/unserialize the `id` attribute on the `User` model when
 getting/setting the attribute from the database. This allows you to no longer need to set
-accessors/mutator methods on the model directly. 
+accessors/mutator methods on the model directly.
 
 > **Note:**  Unlike the built in Laravel accessors/mutators,
 this package will serialize the attribute values when they are passed to an Eloquent query builder.
+
+Included Mutators
+-----------------
+
+- `uuid_v1_binary` Will take a uuid version 1, re-order its bytes so that if uuidA was generated before uuidB, then storedUuidA < storedUuidB, and store it in the database as 16 bytes of data. For more information on the re-ordering of bytes, see: https://www.percona.com/blog/2014/12/19/store-uuid-optimized-way/.
+- `ip_binary` Will take a string representation of an IPv4 or IPv6 and store it as 16 bytes in the database.
+- `encrypt_string` Will take a non encrypted string and encrypt it when going to the database.
+- `hex_binary` Will take any hexadecimal string attribute and store it as binary data.
+- `unix_timestamp` Will take a Carbon date but store it as an integer unix timestamp.
 
 Creating Custom Mutators
 ------------------------
@@ -74,7 +83,7 @@ To define a custom mutator, you'll need to create a class that implements
 any caching logic at the mutator level.
 
 When building and registering a Mutator, it is important to know that they
-are resolved automatically from the Laravel IOC container, which means you may create 
+are resolved automatically from the Laravel IOC container, which means you may create
 service providers for them if they require custom constructor arguments.
 
 ```php
