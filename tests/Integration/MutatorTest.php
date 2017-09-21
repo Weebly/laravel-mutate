@@ -31,8 +31,7 @@ class MutatorTest extends TestCase
 
         $app->singleton('mutator', function (Application $app) {
             $mutator = new MutatorProvider();
-            $default_mutators = require realpath(__DIR__.'/../../config/config.php');
-            $default_mutators = $default_mutators['enabled'];
+            $default_mutators = (require realpath(__DIR__.'/../../config/config.php'))['enabled'];
 
             $mutator->registerMutators($default_mutators);
 
@@ -136,6 +135,22 @@ class MutatorTest extends TestCase
         $this->assertTrue(ctype_digit($values->created_at));
         $this->assertTrue(ctype_digit($values->updated_at));
     }
+
+    public function test_where_closure()
+    {
+        $id = Uuid::uuid1()->toString();
+        $location = 'Foo';
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => $location])->save();
+
+        $model = TestModel::where('name', '=', 'A chair')
+            ->where(function ($q) use ($id) {
+                $q->where('id', '=', $id)
+                    ->orWhere('id', '=', Uuid::uuid1()->toString());
+            })->get();
+
+        $this->assertEquals(1, count($model));
+        $this->assertEquals($id, $model[0]->id);
+    }
 }
 
 class TestModel extends Model
@@ -176,10 +191,19 @@ class TestModel extends Model
 
 class TimestampedModel extends Model
 {
+    /**
+     * {@inheritdoc}
+     */
     protected $table = 'timestamped_model';
 
+    /**
+     * {@inheritdoc}
+     */
     protected $guarded = [];
 
+    /**
+     * {@inheritdoc}
+     */
     protected $mutate = [
         'created_at' => 'unix_timestamp',
         'updated_at' => 'unix_timestamp',
