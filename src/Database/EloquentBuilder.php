@@ -2,9 +2,9 @@
 
 namespace Weebly\Mutate\Database;
 
-use Closure;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Str;
 
 class EloquentBuilder extends Builder
 {
@@ -18,19 +18,32 @@ class EloquentBuilder extends Builder
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
-        if ($column instanceof Closure) {
-            return parent::where($column, $operator, $value, $boolean);
+        $bindings = $this->query->bindings;
+
+        parent::where($column, $operator, $value, $boolean);
+
+        // Remove the last item of the array
+        $where = array_pop($this->query->wheres);
+
+        // Get the column name
+        $mutatedColumn = $this->getUnqualifiedColumnName($where['column']);
+
+        // Modify the values
+        $where['value'] = $this->model->serializeAttribute($mutatedColumn, $where['value']);
+
+        // Add where statement back
+        $this->query->wheres[] = $where;
+
+        // Add the mutated bindings
+        if (! $where['value'] instanceof Expression) {
+            // Reset the bindings to the previous value
+            $this->query->bindings = $bindings;
+
+            // Add the mutated bindings back
+            $this->addBinding($where['value'], 'where');
         }
 
-        if (func_num_args() === 2) {
-            $value = $operator;
-            $operator = '=';
-        }
-
-        $mutatedColumn = $this->getUnqualifiedColumnName($column);
-        $value = $this->model->serializeAttribute($mutatedColumn, $value);
-
-        return parent::where($mutatedColumn, $operator, $value, $boolean);
+        return $this;
     }
 
     /**
@@ -38,14 +51,40 @@ class EloquentBuilder extends Builder
      */
     public function whereIn($column, $values, $boolean = 'and', $not = false)
     {
-        $mutatedColumn = $this->getUnqualifiedColumnName($column);
+        $bindings = $this->query->bindings;
 
+        parent::whereIn($column, $values, $boolean, $not);
+
+        // Remove the last item of the array
+        $where = array_pop($this->query->wheres);
+
+        // Get the column name
+        $mutatedColumn = $this->getUnqualifiedColumnName($where['column']);
+
+        // Loop over all values and mutate them
         $mutatedValues = [];
-        foreach ($values as $value) {
+        foreach ($where['values'] as $value) {
             $mutatedValues[] = $this->model->serializeAttribute($mutatedColumn, $value);
         }
 
-        return parent::whereIn($column, $mutatedValues, $boolean, $not);
+        // Modify the values
+        $where['values'] = $mutatedValues;
+
+        // Add where statement back
+        $this->query->wheres[] = $where;
+
+        // Loop over all the mutated values and add the bindings
+        foreach ($mutatedValues as $value) {
+            if (! $value instanceof Expression) {
+                // Reset the bindings to the previous value
+                $this->query->bindings = $bindings;
+
+                // Add the mutated bindings back
+                $this->addBinding($value, 'where');
+            }
+        }
+
+        return $this;
     }
 
     /**
