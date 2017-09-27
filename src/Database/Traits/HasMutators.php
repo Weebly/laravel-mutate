@@ -16,6 +16,14 @@ trait HasMutators
      */
     protected $mutatedCache = [];
 
+    protected function mutatorAcceptsAttribute($mutator) {
+        $mutatorClass = get_class($mutator);
+        $serialize = new \ReflectionMethod($mutatorClass, 'serializeAttribute');
+        $unserialize = new \ReflectionMethod($mutatorClass, 'unserializeAttribute');
+        $doesAcceptAttribute = $serialize->getNumberOfParameters() == 2 && $unserialize->getNumberOfParameters() == 2;
+        return $doesAcceptAttribute;
+    }
+
     /**
      * @param string $attribute
      * @param mixed  $value
@@ -25,9 +33,14 @@ trait HasMutators
     {
         // Mutate the attribute if a mutator is defined
         if ($this->hasMutator($attribute)) {
-            $mutated = app('mutator')
-                ->get($this->getMutator($attribute))
-                ->serializeAttribute($value);
+            $mutator = app('mutator')
+                ->get($this->getMutator($attribute));
+
+            if ($this->mutatorAcceptsAttribute($mutator)) {
+                $mutated = $mutator->serializeAttribute($value, $attribute);
+            } else {
+                $mutated = $mutator->serializeAttribute($value);
+            }
 
             // Keep a cached copy of the unserialized value
             $this->mutatedCache[$attribute] = $value;
@@ -51,10 +64,14 @@ trait HasMutators
                 return $this->mutatedCache[$attribute];
             }
 
-            $mutated = app('mutator')
-                ->get($this->getMutator($attribute))
-                ->unserializeAttribute($value);
+            $mutator = app('mutator')
+                ->get($this->getMutator($attribute));
 
+            if ($this->mutatorAcceptsAttribute($mutator)) {
+                $mutated = $mutator->unserializeAttribute($value, $attribute);
+            } else {
+                $mutated = $mutator->unserializeAttribute($value);
+            }
             $this->mutatedCache[$attribute] = $mutated;
 
             return $mutated;
