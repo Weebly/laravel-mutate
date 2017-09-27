@@ -13,10 +13,12 @@ class HexBinaryMutator implements MutatorContract
     /**
      * {@inheritdoc}
      */
-    public function serializeAttribute($value)
+    public function serializeAttribute($value, $attribute = null)
     {
         if (! ctype_xdigit($value) || strlen($value) % 2 !== 0) {
-            throw new MutateException(__METHOD__.' expects the value to be serialized to be a hexadecimal string.');
+            $valueString = print_r($value,true);
+            $attributeString = $attribute ? 'of '.$attribute.' ' : '';
+            throw new MutateException(__METHOD__.' expects the value '.$attributeString.'('.$valueString.') to be serialized to be a hexadecimal string.');
         }
 
         return hex2bin($value);
@@ -25,7 +27,7 @@ class HexBinaryMutator implements MutatorContract
     /**
      * {@inheritdoc}
      */
-    public function unserializeAttribute($value)
+    public function unserializeAttribute($value, $attribute = null)
     {
         if (! $value) {
             return;
