@@ -88,10 +88,10 @@ class EloquentBuilder extends Builder
         $this->query->wheres[] = $where;
 
         // Loop over all the mutated values and add the bindings
+        $this->query->bindings = $bindings;
         foreach ($mutatedValues as $value) {
             if (! $value instanceof Expression) {
                 // Reset the bindings to the previous value
-                $this->query->bindings = $bindings;
 
                 // Add the mutated bindings back
                 $this->addBinding($value, 'where');
