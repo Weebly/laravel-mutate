@@ -10,6 +10,14 @@ abstract class Model extends Eloquent
     use HasMutators;
 
     /**
+     * @inheritdoc
+     */
+    public function getKey()
+    {
+        return $this->getAttributeFromArray($this->getKeyName());
+    }
+
+    /**
      * @param string $key
      * @return \Illuminate\Foundation\Application|mixed
      */
