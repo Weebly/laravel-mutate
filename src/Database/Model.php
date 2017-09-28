@@ -10,7 +10,7 @@ abstract class Model extends Eloquent
     use HasMutators;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getKey()
     {

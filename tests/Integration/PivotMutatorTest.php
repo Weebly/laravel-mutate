@@ -66,7 +66,7 @@ class PivotMutatorTest extends TestCase
         $idB = Uuid::uuid1()->toString();
         $modelA = (new TestModelA())->create(['id' => $idA, 'name' => 'A table']);
         $modelB = (new TestModelB())->create(['id' => $idB, 'name' => 'B table']);
-        
+
         $modelA->testModelBs()->attach($modelB, ['extra' => 'Something Extra']);
 
         $this->assertEquals(1, $modelA->testModelBs()->count());
@@ -152,4 +152,3 @@ class TestModelB extends Model
         return $this->belongsToMany(TestModelA::class, 'pivot_table', 'b_id', 'a_id')->withPivot('extra');
     }
 }
-
