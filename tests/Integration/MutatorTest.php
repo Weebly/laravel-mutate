@@ -85,12 +85,19 @@ class MutatorTest extends TestCase
         $this->assertEquals($id, $p->id);
     }
 
+    /**
+     * @group debug
+     *
+     * @return void
+     */
     public function test_where_in()
     {
         $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
         $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
-        $p = $model->whereIn('id', [$id])->first();
-        $this->assertEquals($id, $p->id);
+        $model2 = (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+        $p = $model->whereIn('id', [$id, $id2])->get();
+        $this->assertEquals(2, $p->count());
     }
 
     public function test_update()
