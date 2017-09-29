@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * @group integration
  */
-class PivotMutatorTest extends TestCase
+class BelongsToManyMutatedTest extends TestCase
 {
     /**
      * @param \Illuminate\Foundation\Application $app
@@ -24,9 +24,18 @@ class PivotMutatorTest extends TestCase
         $app['config']->set('app.debug', 'true');
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'mutate-test'),
+            'username' => env('DB_USERNAME', 'mutate'),
+            'password' => env('DB_PASSWORD', 'secret'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
+            'strict' => true,
+            'engine' => null,
         ]);
 
         $app->singleton('mutator', function (Application $app) {
@@ -42,6 +51,9 @@ class PivotMutatorTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+        DB::connection()->getPdo()->exec('DROP TABLE IF EXISTS test_model_a');
+        DB::connection()->getPdo()->exec('DROP TABLE IF EXISTS test_model_b');
+        DB::connection()->getPdo()->exec('DROP TABLE IF EXISTS pivot_table');
 
         Schema::create('test_model_a', function ($table) {
             $table->string('name');
@@ -67,7 +79,7 @@ class PivotMutatorTest extends TestCase
         $modelA = (new TestModelA())->create(['id' => $idA, 'name' => 'A table']);
         $modelB = (new TestModelB())->create(['id' => $idB, 'name' => 'B table']);
 
-        $modelA->testModelBs()->attach($modelB, ['extra' => 'Something Extra']);
+        $modelA->testModelBs()->attach($idB, ['extra' => 'Something Extra']);
 
         $this->assertEquals(1, $modelA->testModelBs()->count());
     }
