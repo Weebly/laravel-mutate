@@ -76,12 +76,13 @@ class BelongsToManyMutatedTest extends TestCase
     {
         $idA = Uuid::uuid1()->toString();
         $idB = Uuid::uuid1()->toString();
+        $idC = Uuid::uuid1()->toString();
         $modelA = (new TestModelA())->create(['id' => $idA, 'name' => 'A table']);
         $modelB = (new TestModelB())->create(['id' => $idB, 'name' => 'B table']);
+        $modelC = (new TestModelB())->create(['id' => $idC, 'name' => 'B table']);
 
-        $modelA->testModelBs()->attach($idB, ['extra' => 'Something Extra']);
-
-        $this->assertEquals(1, $modelA->testModelBs()->count());
+        $modelA->testModelBs()->attach(TestModelB::all(), ['extra' => 'Something Extra']);
+        $this->assertEquals(2, $modelA->testModelBs()->count());
     }
 }
 
@@ -130,7 +131,7 @@ class TestModelB extends Model
     /**
      * {@inheritdoc}
      */
-    protected $table = 'test_model_a';
+    protected $table = 'test_model_b';
 
     /**
      * {@inheritdoc}

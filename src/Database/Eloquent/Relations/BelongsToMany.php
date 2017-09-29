@@ -4,6 +4,8 @@ namespace Weebly\Mutate\Database\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as BaseCollection;
 
 class BelongsToMany extends EloquentBelongsToMany
 {
@@ -94,9 +96,7 @@ class BelongsToMany extends EloquentBelongsToMany
 
         if ($value instanceof Collection) {
             $values = $value->modelKeys();
-        }
-
-        if ($value instanceof BaseCollection) {
+        } elseif ($value instanceof BaseCollection) {
             $values = $value->toArray();
         }
 
