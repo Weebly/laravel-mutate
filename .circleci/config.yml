@@ -6,8 +6,7 @@ jobs:
       - image: circleci/mysql:5.7
         environment:
           - MYSQL_USER=mutate
-          - MYSQL_PASSWORD=
-          - MYSQL_ALLOW_EMPTY_PASSWORD=true
+          - MYSQL_PASSWORD=secret
           - MYSQL_DATABASE=circle-test
     working_directory: ~/laravel-mutate
     steps:
