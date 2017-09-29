@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMan
 class BelongsToMany extends EloquentBelongsToMany
 {
     /**
-     * If parent model uses mutator for its key, serialize the attribute
+     * If parent model uses mutator for its key, serialize the attribute.
      *
      * @return mixed
      */
     protected function getParentKeyValue()
     {
         $value = $this->parent->{$this->parentKey};
-        
+
         if ($this->parent->hasMutator($this->parentKey)) {
             $value = $this->parent->serializeAttribute($this->parentKey, $value);
         }
@@ -55,7 +55,7 @@ class BelongsToMany extends EloquentBelongsToMany
         if ($timed) {
             $record = $this->addTimestampsToAttachment($record);
         }
- 
+
         return $record;
     }
 
@@ -105,7 +105,7 @@ class BelongsToMany extends EloquentBelongsToMany
 
         if ($this->related->hasMutator($this->related->getKeyName())) {
             $related = $this->related;
-            $values = array_map(function($attribute) use ($related){
+            $values = array_map(function ($attribute) use ($related) {
                 return $related->serializeAttribute($related->getKeyName(), $attribute);
             }, $values);
         }
