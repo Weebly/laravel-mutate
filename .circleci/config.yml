@@ -3,11 +3,6 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.1.8-browsers
-      - image: mysql:5.7
-        environment:
-        - MYSQL_DATABASE=mutate-test
-        - MYSQL_USER=mutate
-        - MYSQL_PASSWORD=secret
     working_directory: ~/laravel-mutate
     steps:
       - checkout
