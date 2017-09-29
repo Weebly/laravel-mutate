@@ -6,6 +6,10 @@ Eloquent Mutators
 [![StyleCI](https://styleci.io/repos/102659341/shield?branch=master)](https://styleci.io/repos/102659341)
 [![CircleCI](https://circleci.com/gh/Weebly/laravel-mutate/tree/master.svg?style=shield)](https://circleci.com/gh/Weebly/laravel-mutate)
 
+This package allows you to map your model attributes to database columns when the type in the PHP model does not match the type in the database column.
+
+This could be using `$model->ip_address` as a `string` in your eloquent model but storing it as a `BINARY(16)` in the database for efficiency. Or having a string always encrypted in the DB but readable in clear form within your models.
+
 Installing
 ----------
 
