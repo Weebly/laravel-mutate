@@ -3,9 +3,16 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.1.8-browsers
+      - image: circleci/mysql:5.7
+        environment:
+          - MYSQL_USER=mutate
+          - MYSQL_PASSWORD=
+          - MYSQL_ALLOW_EMPTY_PASSWORD=true
+          - MYSQL_DATABASE=circle-test
     working_directory: ~/laravel-mutate
     steps:
       - checkout
+      - run: sudo docker-php-ext-install pdo_mysql
       - run: sudo composer self-update
       - restore_cache:
           keys:
