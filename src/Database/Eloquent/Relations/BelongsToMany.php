@@ -3,6 +3,7 @@
 namespace Weebly\Mutate\Database\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
+use Illuminate\Database\Eloquent\Model;
 
 class BelongsToMany extends EloquentBelongsToMany
 {
