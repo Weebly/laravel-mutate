@@ -95,7 +95,7 @@ class BelongsToManyMutatedTest extends TestCase
         $modelA2 = (new TestModelA())->create(['id' => $idA2, 'name' => 'A table 2']);
         $modelB1 = (new TestModelB())->create(['id' => $idB1, 'name' => 'B table 1']);
         $modelB2 = (new TestModelB())->create(['id' => $idB2, 'name' => 'B table 2']);
-        
+
         $modelA1->testModelBs()->attach($modelB1);
         $modelA2->testModelBs()->attach($modelB2);
 
