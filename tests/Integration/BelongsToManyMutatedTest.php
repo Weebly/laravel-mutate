@@ -84,6 +84,18 @@ class BelongsToManyMutatedTest extends TestCase
         $modelA->testModelBs()->attach(TestModelB::all(), ['extra' => 'Something Extra']);
         $this->assertEquals(2, $modelA->testModelBs()->count());
     }
+
+    public function testEagerLoadRelations()
+    {
+        $idA = Uuid::uuid1()->toString();
+        $idB = Uuid::uuid1()->toString();
+        $modelA = (new TestModelA())->create(['id' => $idA, 'name' => 'A table']);
+        $modelB = (new TestModelB())->create(['id' => $idB, 'name' => 'B table']);
+        $modelA->testModelBs()->attach($modelB);
+
+        $result = TestModelA::first()->with('testModelBs')->get()->toArray();
+        $this->assertEquals(count($result[0]['test_model_bs']), 1);
+    }
 }
 
 class TestModelA extends Model
