@@ -85,16 +85,23 @@ class BelongsToManyMutatedTest extends TestCase
         $this->assertEquals(2, $modelA->testModelBs()->count());
     }
 
-    public function testEagerLoadRelations()
+    public function testEagerLoadRelationsMatchesProperly()
     {
-        $idA = Uuid::uuid1()->toString();
-        $idB = Uuid::uuid1()->toString();
-        $modelA = (new TestModelA())->create(['id' => $idA, 'name' => 'A table']);
-        $modelB = (new TestModelB())->create(['id' => $idB, 'name' => 'B table']);
-        $modelA->testModelBs()->attach($modelB);
+        $idA1 = Uuid::uuid1()->toString();
+        $idA2 = Uuid::uuid1()->toString();
+        $idB1 = Uuid::uuid1()->toString();
+        $idB2 = Uuid::uuid1()->toString();
+        $modelA1 = (new TestModelA())->create(['id' => $idA1, 'name' => 'A table 1']);
+        $modelA2 = (new TestModelA())->create(['id' => $idA2, 'name' => 'A table 2']);
+        $modelB1 = (new TestModelB())->create(['id' => $idB1, 'name' => 'B table 1']);
+        $modelB2 = (new TestModelB())->create(['id' => $idB2, 'name' => 'B table 2']);
+        
+        $modelA1->testModelBs()->attach($modelB1);
+        $modelA2->testModelBs()->attach($modelB2);
 
-        $result = TestModelA::first()->with('testModelBs')->get()->toArray();
-        $this->assertEquals(count($result[0]['test_model_bs']), 1);
+        $results = TestModelA::where('name', 'LIKE', 'A table %')->with('testModelBs')->get()->toArray();
+        $this->assertEquals($idB1, $results[0]['test_model_bs'][0]['id']);
+        $this->assertEquals($idB2, $results[1]['test_model_bs'][0]['id']);
     }
 }
 
