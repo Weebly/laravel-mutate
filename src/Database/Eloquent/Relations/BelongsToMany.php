@@ -40,6 +40,49 @@ class BelongsToMany extends EloquentBelongsToMany
     }
 
     /**
+     * Set the constraints for an eager load of the relation.
+     *
+     * @param  array  $models
+     * @return void
+     */
+    public function addEagerConstraints(array $models)
+    {
+        if ($this->parent->hasMutator($this->parentKey) === false) {
+            parent::addEagerConstraints($models);
+        }
+
+        $this->query->whereIn($this->getQualifiedForeignPivotKeyName(), $this->parseIds($this->getKeys($models, $this->parentKey)));
+    }
+
+    /**
+     * Build model dictionary keyed by the relation's foreign key.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $results
+     * @return array
+     */
+    protected function buildDictionary(Collection $results)
+    {
+        // First we will build a dictionary of child models keyed by the foreign key
+        // of the relation so that we will easily and quickly match them to their
+        // parents without having a possibly slow inner loops for every models.
+        $dictionary = [];
+
+        foreach ($results as $result) {
+            $key = $result->{$this->accessor}->{$this->foreignPivotKey};
+
+            // If the pivots parent serializes its key, than the pivot result will also be serialized
+            // This means dictionary lookups will happen with a unserialized key (hex instead of binary)
+            // We need to build the dictionary using unserialized keys so lookups will succeed
+            if ($result->{$this->accessor}->pivotParent->hasMutator($this->relatedKey)) {
+                $key = $result->{$this->accessor}->pivotParent->unserializeAttribute($this->relatedKey, $key);
+            }
+            $dictionary[$key][] = $result;
+        }
+
+        return $dictionary;
+    }
+
+    /**
      * Create a new pivot attachment record.
      *
      * @param  int   $id
