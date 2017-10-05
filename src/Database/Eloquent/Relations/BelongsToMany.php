@@ -69,12 +69,15 @@ class BelongsToMany extends EloquentBelongsToMany
 
         foreach ($results as $result) {
             $key = $result->{$this->accessor}->{$this->foreignPivotKey};
-
+            
             // If the pivots parent serializes its key, than the pivot result will also be serialized
             // This means dictionary lookups will happen with a unserialized key (hex instead of binary)
             // We need to build the dictionary using unserialized keys so lookups will succeed
-            if ($result->{$this->accessor}->pivotParent->hasMutator($this->relatedKey)) {
-                $key = $result->{$this->accessor}->pivotParent->unserializeAttribute($this->relatedKey, $key);
+            if ($result->{$this->accessor}->pivotParent->hasMutator($this->parentKey)) {
+                $mutator = $result->{$this->accessor}->pivotParent->getMutator($this->parentKey);
+                $key = app('mutator')
+                    ->get($mutator)
+                    ->unserializeAttribute($key);
             }
             $dictionary[$key][] = $result;
         }
