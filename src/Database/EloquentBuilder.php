@@ -18,6 +18,12 @@ class EloquentBuilder extends Builder
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
+        if (is_array($column)) {
+            foreach ($column as $name => $value) {
+                $this->where($name, $value);
+            }
+            return $this;
+        }
         $bindings = $this->query->bindings;
 
         parent::where($column, $operator, $value, $boolean);

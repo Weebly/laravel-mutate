@@ -69,6 +69,14 @@ class MutatorTest extends TestCase
         $this->assertNull($p);
     }
 
+    public function test_array_of_wheres()
+    {
+        $id = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id, 'name' => 'A table']);
+        $p = $model->where(['id' => $id])->first();
+        $this->assertEquals($id, $p->id);
+    }
+
     public function test_find()
     {
         $id = Uuid::uuid1()->toString();
