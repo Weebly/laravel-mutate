@@ -73,7 +73,10 @@ class MutatorTest extends TestCase
     {
         $id = Uuid::uuid1()->toString();
         $model = (new TestModel())->create(['id' => $id, 'name' => 'A table']);
-        $p = $model->where(['id' => $id])->first();
+        $p = $model->where([
+            'id' => $id,
+            'name' => 'A table',
+        ])->first();
         $this->assertEquals($id, $p->id);
     }
 
