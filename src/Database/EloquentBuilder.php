@@ -22,6 +22,7 @@ class EloquentBuilder extends Builder
             foreach ($column as $name => $value) {
                 $this->where($name, $value);
             }
+
             return $this;
         }
         $bindings = $this->query->bindings;
