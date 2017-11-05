@@ -4,6 +4,7 @@ namespace Weebly\Mutate\Database\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Weebly\Mutate\Exceptions\MutateException;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
 
@@ -153,7 +154,11 @@ class BelongsToMany extends EloquentBelongsToMany
         if ($this->related->hasMutator($this->related->getKeyName())) {
             $related = $this->related;
             $values = array_map(function ($attribute) use ($related) {
-                return $related->serializeAttribute($related->getKeyName(), $attribute);
+                try {
+                    return $related->serializeAttribute($related->getKeyName(), $attribute);
+                } catch (MutateException $e) {
+                    return $attribute;
+                }
             }, $values);
         }
 
