@@ -4,9 +4,9 @@ namespace Weebly\Mutate\Database\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Weebly\Mutate\Exceptions\MutateException;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
-use Weebly\Mutate\Exceptions\MutateException;
 
 class BelongsToMany extends EloquentBelongsToMany
 {
