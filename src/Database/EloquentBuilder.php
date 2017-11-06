@@ -67,8 +67,10 @@ class EloquentBuilder extends Builder
     {
         if (is_array($id) || $id instanceof Arrayable) {
             $this->whereIn($this->model->getQualifiedKeyName(), $id);
+
             return $this;
         }
+
         return parent::whereKey($id);
     }
 
