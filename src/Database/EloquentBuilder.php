@@ -63,6 +63,20 @@ class EloquentBuilder extends Builder
     /**
      * {@inheritdoc}
      */
+    public function whereKey($id)
+    {
+        if (is_array($id) || $id instanceof Arrayable) {
+            $this->whereIn($this->model->getQualifiedKeyName(), $id);
+
+            return $this;
+        }
+
+        return parent::whereKey($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function whereIn($column, $values, $boolean = 'and', $not = false)
     {
         $bindings = $this->query->bindings;

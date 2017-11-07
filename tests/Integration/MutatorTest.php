@@ -88,6 +88,18 @@ class MutatorTest extends TestCase
         $this->assertEquals($id, $p->id);
     }
 
+    public function test_array_of_find()
+    {
+        $id = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id, 'name' => 'Name A']);
+        $id2 = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id2, 'name' => 'Name B']);
+        $p = $model->find([$id, $id2]);
+        $this->assertEquals(2, $p->count());
+        $this->assertEquals($id, $p[0]->id);
+        $this->assertEquals($id2, $p[1]->id);
+    }
+
     public function test_non_mutated_columns()
     {
         $id = Uuid::uuid1()->toString();
@@ -109,6 +121,18 @@ class MutatorTest extends TestCase
         $model2 = (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
         $p = $model->whereIn('id', [$id, $id2])->get();
         $this->assertEquals(2, $p->count());
+    }
+
+    public function test_where_key()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        $model2 = (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+        $p = $model->whereKey([$id, $id2])->get();
+        $this->assertEquals(2, $p->count());
+        $this->assertEquals($id, $p[0]->id);
+        $this->assertEquals($id2, $p[1]->id);
     }
 
     public function test_update()
