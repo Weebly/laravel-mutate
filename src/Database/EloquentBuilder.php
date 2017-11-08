@@ -32,7 +32,7 @@ class EloquentBuilder extends Builder
         // Remove the last item of the array
         $where = array_pop($this->query->wheres);
 
-        if ($where['type'] === 'Nested') {
+        if ($where['type'] === 'Nested' || $where['type'] === 'Null') {
             // Add where statement back and return
             $this->query->wheres[] = $where;
 
