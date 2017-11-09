@@ -4,12 +4,18 @@ namespace Weebly\Mutate\Database\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Weebly\Mutate\Exceptions\MutateException;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
 
 class BelongsToMany extends EloquentBelongsToMany
 {
+    /**
+     * Local cache of mutated attributes.
+     *
+     * @var array
+     */
+    protected $mutated_values = [];
+
     /**
      * If parent model uses mutator for its key, serialize the attribute.
      *
@@ -18,7 +24,6 @@ class BelongsToMany extends EloquentBelongsToMany
     protected function getParentKeyValue()
     {
         $value = $this->parent->{$this->parentKey};
-
         if ($this->parent->hasMutator($this->parentKey)) {
             $value = $this->parent->serializeAttribute($this->parentKey, $value);
         }
@@ -154,11 +159,14 @@ class BelongsToMany extends EloquentBelongsToMany
         if ($this->related->hasMutator($this->related->getKeyName())) {
             $related = $this->related;
             $values = array_map(function ($attribute) use ($related) {
-                try {
-                    return $related->serializeAttribute($related->getKeyName(), $attribute);
-                } catch (MutateException $e) {
+                if (in_array($attribute, $this->mutated_values) === true) {
                     return $attribute;
                 }
+
+                $value = $related->serializeAttribute($related->getKeyName(), $attribute);
+                $this->mutated_values[] = $value;
+
+                return $value;
             }, $values);
         }
 
