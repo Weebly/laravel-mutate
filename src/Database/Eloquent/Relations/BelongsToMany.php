@@ -4,15 +4,14 @@ namespace Weebly\Mutate\Database\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Weebly\Mutate\Exceptions\MutateException;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
 
 class BelongsToMany extends EloquentBelongsToMany
 {
     /**
-     * Local cache of mutated attributes
-     * 
+     * Local cache of mutated attributes.
+     *
      * @var array
      */
     protected $mutated_values = [];
@@ -166,6 +165,7 @@ class BelongsToMany extends EloquentBelongsToMany
 
                 $value = $related->serializeAttribute($related->getKeyName(), $attribute);
                 $this->mutated_values[] = $value;
+
                 return $value;
             }, $values);
         }
