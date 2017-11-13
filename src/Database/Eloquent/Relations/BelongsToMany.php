@@ -24,7 +24,7 @@ class BelongsToMany extends EloquentBelongsToMany
     protected function getParentKeyValue()
     {
         $value = $this->parent->{$this->parentKey};
-        if ($this->parent->hasMutator($this->parentKey)) {
+        if (! is_null($value) && $this->parent->hasMutator($this->parentKey)) {
             $value = $this->parent->serializeAttribute($this->parentKey, $value);
         }
 

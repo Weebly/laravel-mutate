@@ -85,6 +85,13 @@ class BelongsToManyMutatedTest extends TestCase
         $this->assertEquals(2, $modelA->testModelBs()->count());
     }
 
+    public function testRelationAccessorOnNewRecord()
+    {
+        $modelA = new TestModelA();
+
+        $this->assertEquals(0, $modelA->testModelBs->count());
+    }
+
     public function testEagerLoadRelationsMatchesProperly()
     {
         $idA1 = Uuid::uuid1()->toString();
