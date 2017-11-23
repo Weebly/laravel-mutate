@@ -28,7 +28,7 @@ abstract class Model extends Eloquent
      */
     public function setAttribute($key, $value)
     {
-        if ($this->hasMutator($key) && !is_null($value)) {
+        if ($this->hasMutator($key) && ! is_null($value)) {
             // Set the serialized value on the parent attributes
             $this->attributes[$key] = $this->serializeAttribute($key, $value);
 
