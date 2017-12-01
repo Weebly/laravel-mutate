@@ -195,7 +195,7 @@ class BelongsToMany extends EloquentBelongsToMany
 
         if ($this->related->hasMutator($this->related->getKeyName())) {
             $related = $this->related;
-            $current = array_map(function($id) use ($related) {
+            $current = array_map(function ($id) use ($related) {
                 return $related->unserializeAttribute($related->getKeyName(), $id);
             }, $current);
         }
