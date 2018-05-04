@@ -125,6 +125,14 @@ class EloquentBuilder extends Builder
     /**
      * {@inheritdoc}
      */
+    public function whereNotIn($column, $values, $boolean = 'and')
+    {
+        return $this->whereIn($column, $values, $boolean, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function update(array $values)
     {
         // Determine which values have mutators.

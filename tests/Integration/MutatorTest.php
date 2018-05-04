@@ -108,11 +108,6 @@ class MutatorTest extends TestCase
         $this->assertEquals($id, $p->id);
     }
 
-    /**
-     * @group debug
-     *
-     * @return void
-     */
     public function test_where_in()
     {
         $id = Uuid::uuid1()->toString();
@@ -121,6 +116,16 @@ class MutatorTest extends TestCase
         $model2 = (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
         $p = $model->whereIn('id', [$id, $id2])->get();
         $this->assertEquals(2, $p->count());
+    }
+
+    public function test_where_not_in()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        $model2 = (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+        $p = $model->whereNotIn('id', [$id])->get();
+        $this->assertEquals(1, $p->count());
     }
 
     public function test_where_key()
