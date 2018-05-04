@@ -123,7 +123,7 @@ class EloquentBuilder extends Builder
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function whereNotIn($column, $values, $boolean = 'and')
     {
