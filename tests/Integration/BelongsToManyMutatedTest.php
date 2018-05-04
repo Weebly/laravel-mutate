@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * @group integration
+ * @group mysql
  */
 class BelongsToManyMutatedTest extends TestCase
 {
