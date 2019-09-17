@@ -49,7 +49,7 @@ class BelongsToManyMutatedTest extends TestCase
         });
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         DB::connection()->getPdo()->exec('DROP TABLE IF EXISTS test_model_a');
