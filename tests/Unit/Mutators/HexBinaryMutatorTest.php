@@ -51,10 +51,10 @@ class HexBinaryMutatorTest extends TestCase
     /**
      * @param mixed $value
      * @dataProvider notHexProvider
-     * @expectedException \Weebly\Mutate\Exceptions\MutateException
      */
     public function testWrongFormat($value)
     {
+        $this->expectException(\Weebly\Mutate\Exceptions\MutateException::class);
         (new HexBinaryMutator())->serializeAttribute($value);
     }
 
