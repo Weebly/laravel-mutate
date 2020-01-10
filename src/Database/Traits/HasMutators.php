@@ -41,7 +41,7 @@ trait HasMutators
     /**
      * @param string $attribute
      * @param mixed  $value
-     * @param boolean $force
+     * @param bool $force
      * @return mixed
      */
     public function unserializeAttribute($attribute, $value, $force = false)
