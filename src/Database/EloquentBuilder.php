@@ -166,7 +166,7 @@ class EloquentBuilder extends Builder
             });
         } else {
             $mutatedValues = $values->mapWithKeys(function ($v, $k) use ($model, $mutatedColumn, $key) {
-                return [$model->unserializeAttribute($key, $k) => $model->unserializeAttribute($mutatedColumn, $v)];
+                return [$model->unserializeAttribute($key, $k, true) => $model->unserializeAttribute($mutatedColumn, $v, true)];
             });
         }
 
