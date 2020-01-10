@@ -2,9 +2,9 @@
 
 namespace Weebly\Mutate\Database;
 
-use Weebly\Mutate\Database\Traits\HasMutators;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Weebly\Mutate\Database\Eloquent\Relations\BelongsToMany;
+use Weebly\Mutate\Database\Traits\HasMutators;
 
 abstract class Model extends Eloquent
 {

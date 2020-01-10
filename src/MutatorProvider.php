@@ -3,8 +3,8 @@
 namespace Weebly\Mutate;
 
 use ArrayAccess;
-use Weebly\Mutate\Mutators\MutatorContract;
 use Weebly\Mutate\Exceptions\MutatorNotFoundException;
+use Weebly\Mutate\Mutators\MutatorContract;
 
 class MutatorProvider implements ArrayAccess
 {

@@ -3,11 +3,11 @@
 namespace Weebly\Mutate;
 
 use DB;
-use Ramsey\Uuid\Uuid;
-use Orchestra\Testbench\TestCase;
-use Weebly\Mutate\Database\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
+use Orchestra\Testbench\TestCase;
+use Ramsey\Uuid\Uuid;
+use Weebly\Mutate\Database\Model;
 
 /**
  * @group integration

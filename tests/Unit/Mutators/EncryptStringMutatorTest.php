@@ -2,9 +2,9 @@
 
 namespace Weebly\Mutate\Mutators;
 
+use Illuminate\Contracts\Encryption\Encrypter;
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
-use Illuminate\Contracts\Encryption\Encrypter;
 
 class EncryptStringMutatorTest extends TestCase
 {

@@ -2,8 +2,8 @@
 
 namespace Weebly\Mutate\Mutators;
 
-use stdClass;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class HexBinaryMutatorTest extends TestCase
 {
@@ -71,6 +71,6 @@ class HexBinaryMutatorTest extends TestCase
             'Null cannot be serialized' => [null],
             'Booleans cannot be serialized' => [true],
             'Hex strings should have even lengths to be valid bytes representations' => ['a'],
-         ];
+        ];
     }
 }
