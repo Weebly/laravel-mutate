@@ -3,11 +3,11 @@
 namespace Weebly\Mutate;
 
 use DB;
-use Ramsey\Uuid\Uuid;
-use Orchestra\Testbench\TestCase;
-use Weebly\Mutate\Database\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
+use Orchestra\Testbench\TestCase;
+use Ramsey\Uuid\Uuid;
+use Weebly\Mutate\Database\Model;
 
 /**
  * @group integration
@@ -157,18 +157,26 @@ class MutatorTest extends TestCase
     public function test_pluck()
     {
         $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
         (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo'])->save();
-        $ids = TestModel::where('id', $id)->pluck('id')->toArray();
-        $this->assertEquals([$id], $ids);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A chair', 'location' => 'Foo'])->save();
+        $ids = TestModel::whereIn('id', [$id, $id2])->pluck('id')->toArray();
+        $this->assertEquals([$id, $id2], $ids);
     }
 
     public function test_pluck_with_key()
     {
         $id = Uuid::uuid1()->toString();
-        $location = 'Foo';
-        (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => $location])->save();
-        $ids = TestModel::where('id', $id)->pluck('id', 'location')->toArray();
-        $this->assertEquals([$location => $id], $ids);
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo'])->save();
+        (new TestModel())->create(['id' => $id2, 'name' => 'A chair', 'location' => 'Bar'])->save();
+        $ids = TestModel::whereIn('id', [$id, $id2])->pluck('id', 'location')->toArray();
+
+        $expected = [
+            'Foo' => $id,
+            'Bar' => $id2,
+        ];
+        $this->assertEquals($expected, $ids);
     }
 
     public function test_timestamps()

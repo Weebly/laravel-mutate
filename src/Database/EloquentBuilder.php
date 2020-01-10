@@ -2,9 +2,9 @@
 
 namespace Weebly\Mutate\Database;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Str;
 
 class EloquentBuilder extends Builder
 {
@@ -162,11 +162,11 @@ class EloquentBuilder extends Builder
         $model = $this->model;
         if (is_null($key)) {
             $mutatedValues = $values->map(function ($v) use ($model, $mutatedColumn) {
-                return $model->unserializeAttribute($mutatedColumn, $v);
+                return $model->unserializeAttribute($mutatedColumn, $v, true);
             });
         } else {
             $mutatedValues = $values->mapWithKeys(function ($v, $k) use ($model, $mutatedColumn, $key) {
-                return [$model->unserializeAttribute($key, $k) => $model->unserializeAttribute($mutatedColumn, $v)];
+                return [$model->unserializeAttribute($key, $k, true) => $model->unserializeAttribute($mutatedColumn, $v, true)];
             });
         }
 

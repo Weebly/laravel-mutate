@@ -41,13 +41,14 @@ trait HasMutators
     /**
      * @param string $attribute
      * @param mixed  $value
+     * @param bool $force
      * @return mixed
      */
-    public function unserializeAttribute($attribute, $value)
+    public function unserializeAttribute($attribute, $value, $force = false)
     {
         // Mutate the attribute if a mutator is defined
         if ($this->hasMutator($attribute)) {
-            if (array_key_exists($attribute, $this->mutatedCache)) {
+            if ($force === false && array_key_exists($attribute, $this->mutatedCache)) {
                 return $this->mutatedCache[$attribute];
             }
 
