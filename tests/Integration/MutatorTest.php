@@ -3,11 +3,11 @@
 namespace Weebly\Mutate;
 
 use DB;
-use Ramsey\Uuid\Uuid;
-use Orchestra\Testbench\TestCase;
-use Weebly\Mutate\Database\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
+use Orchestra\Testbench\TestCase;
+use Ramsey\Uuid\Uuid;
+use Weebly\Mutate\Database\Model;
 
 /**
  * @group integration
@@ -157,7 +157,7 @@ class MutatorTest extends TestCase
     public function test_pluck()
     {
         $id = Uuid::uuid1()->toString();
-        $id2 = Uuid::uuid1()->toString();;
+        $id2 = Uuid::uuid1()->toString();
         (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo'])->save();
         (new TestModel())->create(['id' => $id2, 'name' => 'A chair', 'location' => 'Foo'])->save();
         $ids = TestModel::whereIn('id', [$id, $id2])->pluck('id')->toArray();
@@ -176,7 +176,7 @@ class MutatorTest extends TestCase
             'Foo' => $id,
             'Bar' => $id2,
         ];
-       $this->assertEquals($expected, $ids);
+        $this->assertEquals($expected, $ids);
     }
 
     public function test_timestamps()
