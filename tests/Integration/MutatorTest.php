@@ -157,9 +157,11 @@ class MutatorTest extends TestCase
     public function test_pluck()
     {
         $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();;
         (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo'])->save();
-        $ids = TestModel::where('id', $id)->pluck('id')->toArray();
-        $this->assertEquals([$id], $ids);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A chair', 'location' => 'Foo'])->save();
+        $ids = TestModel::whereIn('id', [$id, $id2])->pluck('id')->toArray();
+        $this->assertEquals([$id, $id2], $ids);
     }
 
     public function test_pluck_with_key()

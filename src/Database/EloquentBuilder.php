@@ -162,7 +162,7 @@ class EloquentBuilder extends Builder
         $model = $this->model;
         if (is_null($key)) {
             $mutatedValues = $values->map(function ($v) use ($model, $mutatedColumn) {
-                return $model->unserializeAttribute($mutatedColumn, $v);
+                return $model->unserializeAttribute($mutatedColumn, $v, true);
             });
         } else {
             $mutatedValues = $values->mapWithKeys(function ($v, $k) use ($model, $mutatedColumn, $key) {
