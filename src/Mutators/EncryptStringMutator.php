@@ -2,8 +2,8 @@
 
 namespace Weebly\Mutate\Mutators;
 
-use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Encryption\Encrypter;
 
 class EncryptStringMutator implements MutatorContract
 {

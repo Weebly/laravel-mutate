@@ -2,10 +2,10 @@
 
 namespace Weebly\Mutate\Database\Eloquent\Relations;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
+use Illuminate\Support\Collection as BaseCollection;
 
 class BelongsToMany extends EloquentBelongsToMany
 {
