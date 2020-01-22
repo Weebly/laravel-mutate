@@ -99,7 +99,11 @@ class EloquentBuilder extends Builder
         // Loop over all values and mutate them
         $mutatedValues = [];
         foreach ($where['values'] as $value) {
-            $mutatedValues[] = $this->model->serializeAttribute($mutatedColumn, $value);
+            if ($value instanceof Expression) {
+                $mutatedValues[] = $value;
+            } else {
+                $mutatedValues[] = $this->model->serializeAttribute($mutatedColumn, $value);
+            }
         }
 
         // Modify the values
