@@ -93,13 +93,24 @@ class EloquentBuilder extends Builder
             return $this;
         }
 
+        // if ($where['type'] === 'In') {
+        //     if (!empty($where['values']) && $where['values'][0] instanceof Expression) {
+        //         $this->query->wheres[] = $where;
+        //         return $this;
+        //     }
+        // }
+
         // Get the column name
         $mutatedColumn = $this->getUnqualifiedColumnName($where['column']);
 
         // Loop over all values and mutate them
         $mutatedValues = [];
         foreach ($where['values'] as $value) {
-            $mutatedValues[] = $this->model->serializeAttribute($mutatedColumn, $value);
+            if ($value instanceof Expression) {
+                $mutatedValues[] = $value;
+            } else {
+                $mutatedValues[] = $this->model->serializeAttribute($mutatedColumn, $value);
+            }
         }
 
         // Modify the values
