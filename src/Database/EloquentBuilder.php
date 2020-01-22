@@ -93,13 +93,6 @@ class EloquentBuilder extends Builder
             return $this;
         }
 
-        // if ($where['type'] === 'In') {
-        //     if (!empty($where['values']) && $where['values'][0] instanceof Expression) {
-        //         $this->query->wheres[] = $where;
-        //         return $this;
-        //     }
-        // }
-
         // Get the column name
         $mutatedColumn = $this->getUnqualifiedColumnName($where['column']);
 
