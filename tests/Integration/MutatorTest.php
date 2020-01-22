@@ -124,7 +124,7 @@ class MutatorTest extends TestCase
         $id2 = Uuid::uuid1()->toString();
         (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
         (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
-        $p = TestModel::whereIn('id', function($query) {
+        $p = TestModel::whereIn('id', function ($query) {
             $query->select('id')->from('test_model');
         })->get();
         $this->assertEquals(2, $p->count());
