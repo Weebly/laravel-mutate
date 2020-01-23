@@ -95,6 +95,7 @@ class EloquentBuilder extends Builder
 
         if ($where['type'] === 'InSub') {
             $this->query->wheres[] = $where;
+
             return parent::whereIn($column, $values, $boolean, $not);
         }
 
