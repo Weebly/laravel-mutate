@@ -93,11 +93,17 @@ class EloquentBuilder extends Builder
             return $this;
         }
 
+        if ($where['type'] === 'InSub') {
+            $this->query->wheres[] = $where;
+            return parent::whereIn($column, $values, $boolean, $not);
+        }
+
         // Get the column name
         $mutatedColumn = $this->getUnqualifiedColumnName($where['column']);
 
         // Loop over all values and mutate them
         $mutatedValues = [];
+        $values = $where['values'] ?? null;
         foreach ($where['values'] as $value) {
             if ($value instanceof Expression) {
                 $mutatedValues[] = $value;
