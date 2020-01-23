@@ -104,7 +104,6 @@ class EloquentBuilder extends Builder
 
         // Loop over all values and mutate them
         $mutatedValues = [];
-        $values = $where['values'] ?? null;
         foreach ($where['values'] as $value) {
             if ($value instanceof Expression) {
                 $mutatedValues[] = $value;
