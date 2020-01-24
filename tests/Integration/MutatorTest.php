@@ -125,8 +125,20 @@ class MutatorTest extends TestCase
         (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
         (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
         $p = TestModel::whereIn('id', function ($query) {
-            $query->select('id')->from('test_model');
+            $query->select('id')->from('test_model')->whereNull('location');
         })->get();
+        $this->assertEquals(2, $p->count());
+        $this->assertEquals($id, $p->first()->id);
+        $this->assertEquals($id2, $p->last()->id);
+    }
+
+    public function test_where_in_wherein_subquery()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+        $p = TestModel::withWherein()->get();
         $this->assertEquals(2, $p->count());
         $this->assertEquals($id, $p->first()->id);
         $this->assertEquals($id2, $p->last()->id);
@@ -256,6 +268,14 @@ class TestModel extends Model
         'id' => 'uuid_v1_binary',
         'location' => 'encrypt_string',
     ];
+
+    public function scopeWithWherein($builder)
+    {
+        $builder->whereIn('id', function ($subquery) {
+            $subquery->select('id')->from('test_model')
+                ->whereNull('location');
+        });
+    }
 }
 
 class TimestampedModel extends Model
