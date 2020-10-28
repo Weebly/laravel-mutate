@@ -136,7 +136,6 @@ class MutatorTest extends TestCase
     {
         $id = Uuid::uuid1()->toString();
         $id2 = Uuid::uuid1()->toString();
-        $id3 = Uuid::uuid1()->toString();
         (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'One']);
         (new TestModel())->create(['id' => $id2, 'name' => 'A table', 'location' => 'Two']);
 
