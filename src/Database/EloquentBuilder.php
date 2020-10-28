@@ -3,13 +3,12 @@
 namespace Weebly\Mutate\Database;
 
 use Closure;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as BaseEloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
 
-class EloquentBuilder extends Builder
+class EloquentBuilder extends BaseEloquentBuilder
 {
     /**
      * @var \Weebly\Mutate\Database\Model
