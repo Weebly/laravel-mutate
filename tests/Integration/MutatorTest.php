@@ -132,6 +132,23 @@ class MutatorTest extends TestCase
         $this->assertEquals($id2, $p->last()->id);
     }
 
+    public function test_where_in_subquery_with_bindings()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        $id3 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'One']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table', 'location' => 'Two']);
+
+        $query = TestModel::query()->where('name', '!=', 'A lamp')->whereIn('id', function ($query) {
+            $query->select('id')->from('test_model')->where('name', 'A lamp')->orWhere('name', 'A chair');
+        });
+
+        $p = $query->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id, $p->first()->id);
+    }
+
     public function test_where_in_wherein_subquery()
     {
         $id = Uuid::uuid1()->toString();
