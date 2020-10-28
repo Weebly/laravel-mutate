@@ -6,9 +6,9 @@
     "keywords": ["laravel", "eloquent", "uuid", "encrypt", "database"],
     "require": {
         "ramsey/uuid": "~3.0",
-        "illuminate/database": ">=5.0 <7.0.0",
-        "illuminate/support": ">=5.0 <7.0.0",
-        "illuminate/encryption": ">=5.0 <7.0.0"
+        "illuminate/database": "^6.0",
+        "illuminate/support": "^6.0",
+        "illuminate/encryption": "^6.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
