@@ -2,11 +2,13 @@
 
 namespace Weebly\Mutate\Database;
 
-use Illuminate\Database\Eloquent\Builder;
+use Closure;
+use Illuminate\Database\Eloquent\Builder as BaseEloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
 
-class EloquentBuilder extends Builder
+class EloquentBuilder extends BaseEloquentBuilder
 {
     /**
      * @var \Weebly\Mutate\Database\Model
@@ -83,6 +85,13 @@ class EloquentBuilder extends Builder
 
         parent::whereIn($column, $values, $boolean, $not);
 
+        // For sub-queries in Laravel 6. We don't need to do anything.
+        if ($values instanceof QueryBuilder ||
+            $values instanceof BaseEloquentBuilder ||
+            $values instanceof Closure) {
+            return $this;
+        }
+
         // Remove the last item of the array
         $where = array_pop($this->query->wheres);
 
@@ -96,7 +105,7 @@ class EloquentBuilder extends Builder
         if ($where['type'] === 'InSub' || $where['type'] === 'NotInSub') {
             $this->query->wheres[] = $where;
 
-            return parent::whereIn($column, $values, $boolean, $not);
+            return $this;
         }
 
         // Get the column name
