@@ -79,7 +79,7 @@ class PivotTest extends TestCase
         $first = (new FirstModel())->create(['id' => $id1, 'name' => 'First']);
         $second = (new SecondModel())->create(['id' => $id2, 'name' => 'Second']);
 
-        $first->second_models()->attach($second->id);
+        $first->second_models()->attach($second);
         $this->assertEquals(1, $first->second_models()->count());
 
         $first->second_models()->detach($second);

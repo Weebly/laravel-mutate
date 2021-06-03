@@ -148,6 +148,7 @@ class BelongsToMany extends EloquentBelongsToMany
 
         if ($this->related->hasMutator($this->related->getKeyName())) {
             $related = $this->related;
+
             return $related->serializeAttribute($related->getKeyName(), $value);
         }
 
