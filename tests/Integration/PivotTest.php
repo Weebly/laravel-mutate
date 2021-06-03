@@ -78,7 +78,7 @@ class PivotTest extends TestCase
         $id2 = Uuid::uuid1()->getHex();
         $first = (new FirstModel())->create(['id' => $id1, 'name' => 'First']);
         $second = (new SecondModel())->create(['id' => $id2, 'name' => 'Second']);
-        
+
         $first->second_models()->attach($second->id);
         $this->assertEquals(1, $first->second_models()->count());
 

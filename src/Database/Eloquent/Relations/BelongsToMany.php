@@ -251,7 +251,6 @@ class BelongsToMany extends EloquentBelongsToMany
         return $changes;
     }
 
-
     /**
      * Detach models from the relationship using a custom class.
      *
