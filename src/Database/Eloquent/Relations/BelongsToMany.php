@@ -135,6 +135,27 @@ class BelongsToMany extends EloquentBelongsToMany
     }
 
     /**
+     * Get the ID from the given mixed value.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    protected function parseId($value)
+    {
+        if ($value instanceof Model) {
+            return $value->{$this->relatedKey};
+        }
+
+        if ($this->related->hasMutator($this->related->getKeyName())) {
+            $related = $this->related;
+
+            return $related->serializeAttribute($related->getKeyName(), $value);
+        }
+
+        return $value;
+    }
+
+    /**
      * Get all of the IDs from the given mixed value.
      *
      * @param  mixed  $value
@@ -229,5 +250,25 @@ class BelongsToMany extends EloquentBelongsToMany
         }
 
         return $changes;
+    }
+
+    /**
+     * Detach models from the relationship using a custom class.
+     *
+     * @param  mixed  $ids
+     * @return int
+     */
+    protected function detachUsingCustomClass($ids)
+    {
+        $results = 0;
+
+        foreach ($this->parseIds($ids) as $id) {
+            $results += $this->newPivot([
+                $this->foreignPivotKey => $this->parseId($this->parent->{$this->parentKey}),
+                $this->relatedPivotKey => $id,
+            ], true)->delete();
+        }
+
+        return $results;
     }
 }
