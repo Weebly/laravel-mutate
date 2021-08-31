@@ -1,0 +1,59 @@
+name: Run tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  php-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.6
+        env:
+          MYSQL_USER: mutate
+          MYSQL_PASSWORD: secret
+          MYSQL_DATABASE: circle-test
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    strategy:
+      matrix:
+        php: [7.1, 7.2, 7.3, 7.4, 8.0]
+        laravel: [6.*, 7.*, 8.*]
+        include:
+          - laravel: 6.*
+            testbench: 4.*
+          - laravel: 7.*
+            testbench: 5.*
+          - laravel: 8.*
+            testbench: 6.*
+
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          coverage: none
+          tools: composer:v2
+
+      - name: Install PHP dependencies
+        run: |
+          composer require --dev "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --prefer-stable --no-interaction --no-progress
+
+      - name: Execute Unit Tests
+        run: vendor/bin/phpunit --testsuite Unit
+
+      - name: Execute Integration Tests
+        run: vendor/bin/phpunit --test Integration
+        env:
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
