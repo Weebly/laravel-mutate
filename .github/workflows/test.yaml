@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [7.1, 7.2, 7.3, 7.4, 8.0]
+        php: [7.2, 7.3, 7.4, 8.0]
         laravel: [6.*, 7.*, 8.*]
         include:
           - laravel: 6.*
@@ -31,6 +31,10 @@ jobs:
             testbench: 5.*
           - laravel: 8.*
             testbench: 6.*
+        exclude:
+          # Laravel 8 only support >= PHP 7.3
+          - laravel: 8.*
+            php: [7.1, 7.2]
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
