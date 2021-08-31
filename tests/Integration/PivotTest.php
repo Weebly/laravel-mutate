@@ -59,8 +59,8 @@ class PivotTest extends TestCase
 
     public function testAttach()
     {
-        $id1 = (string)Uuid::uuid1()->getHex();
-        $id2 = (string)Uuid::uuid1()->getHex();
+        $id1 = (string) Uuid::uuid1()->getHex();
+        $id2 = (string) Uuid::uuid1()->getHex();
         $first = (new FirstModel())->create(['id' => $id1, 'name' => 'First']);
         $second = (new SecondModel())->create(['id' => $id2, 'name' => 'Second']);
 
@@ -74,8 +74,8 @@ class PivotTest extends TestCase
 
     public function testDetach()
     {
-        $id1 = (string)Uuid::uuid1()->getHex();
-        $id2 = (string)Uuid::uuid1()->getHex();
+        $id1 = (string) Uuid::uuid1()->getHex();
+        $id2 = (string) Uuid::uuid1()->getHex();
         $first = (new FirstModel())->create(['id' => $id1, 'name' => 'First']);
         $second = (new SecondModel())->create(['id' => $id2, 'name' => 'Second']);
 
