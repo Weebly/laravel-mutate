@@ -4,7 +4,6 @@ Eloquent Mutators
 [![License](https://img.shields.io/packagist/l/Weebly/laravel-mutate.svg)](https://packagist.org/packages/weebly/laravel-mutate)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Weebly/laravel-mutate.svg)](https://packagist.org/packages/weebly/laravel-mutate)
 [![StyleCI](https://styleci.io/repos/102659341/shield?branch=master)](https://styleci.io/repos/102659341)
-[![CircleCI](https://circleci.com/gh/Weebly/laravel-mutate/tree/master.svg?style=shield)](https://circleci.com/gh/Weebly/laravel-mutate)
 ![Tests](https://github.com/Weebly/laravel-mutate/actions/workflows/test.yaml/badge.svg)
 
 
