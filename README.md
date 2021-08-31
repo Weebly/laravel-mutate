@@ -5,6 +5,8 @@ Eloquent Mutators
 [![Latest Stable Version](https://img.shields.io/packagist/v/Weebly/laravel-mutate.svg)](https://packagist.org/packages/weebly/laravel-mutate)
 [![StyleCI](https://styleci.io/repos/102659341/shield?branch=master)](https://styleci.io/repos/102659341)
 [![CircleCI](https://circleci.com/gh/Weebly/laravel-mutate/tree/master.svg?style=shield)](https://circleci.com/gh/Weebly/laravel-mutate)
+![Tests](https://github.com/Weebly/laravel-mutate/actions/workflows/test.yaml/badge.svg)
+
 
 This package allows you to map your model attributes to database columns when the type in the PHP model does not match the type in the database column.
 
