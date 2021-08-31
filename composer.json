@@ -5,7 +5,7 @@
     "license": "BSD-2-Clause",
     "keywords": ["laravel", "eloquent", "uuid", "encrypt", "database"],
     "require": {
-        "ramsey/uuid": "~3.0",
+        "ramsey/uuid": "~3.0 || ~4.0",
         "illuminate/database": "^6.0 || ^7.0 || ^8.0",
         "illuminate/support": "^6.0 || ^7.0 || ^8.0",
         "illuminate/encryption": "^6.0 || ^7.0 || ^8.0"
