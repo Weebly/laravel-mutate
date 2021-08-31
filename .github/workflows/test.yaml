@@ -34,7 +34,10 @@ jobs:
         exclude:
           # Laravel 8 only support >= PHP 7.3
           - laravel: 8.*
-            php: [7.1, 7.2]
+            php: 7.1
+          - laravel: 8.*
+            php: 7.2
+
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
@@ -46,7 +49,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, pdo_mysql, bcmath, soap, intl, gd, exif, iconv, imagick
           coverage: none
           tools: composer:v2
 
