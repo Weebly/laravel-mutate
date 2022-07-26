@@ -14,8 +14,9 @@ class MutatorProvider implements ArrayAccess
     protected $mutators = [];
 
     /**
-     * @param string $mutator
+     * @param  string  $mutator
      * @return \Weebly\Mutate\Mutators\MutatorContract
+     *
      * @throws \Weebly\Mutate\Exceptions\MutatorNotFoundException
      */
     public function get($mutator)
@@ -31,8 +32,8 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $name
-     * @param mixed  $mutator
+     * @param  string  $name
+     * @param  mixed  $mutator
      * @return $this
      */
     public function set($name, $mutator)
@@ -43,7 +44,7 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $mutator
+     * @param  string  $mutator
      * @return bool
      */
     public function exists($mutator)
@@ -52,7 +53,7 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param array $mutators
+     * @param  array  $mutators
      */
     public function registerMutators(array $mutators)
     {
@@ -63,7 +64,7 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $offset
+     * @param  string  $offset
      * @return bool
      */
     public function offsetExists($offset)
@@ -72,8 +73,9 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $offset
+     * @param  string  $offset
      * @return \Weebly\Mutate\Mutators\MutatorContract
+     *
      * @throws \Weebly\Mutate\Exceptions\MutatorNotFoundException
      */
     public function offsetGet($offset)
@@ -82,8 +84,8 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $offset
-     * @param mixed  $value
+     * @param  string  $offset
+     * @param  mixed  $value
      * @return \Weebly\Mutate\MutatorProvider
      */
     public function offsetSet($offset, $value)
@@ -92,7 +94,7 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $offset
+     * @param  string  $offset
      */
     public function offsetUnset($offset)
     {
@@ -100,8 +102,9 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      * @return \Weebly\Mutate\Mutators\MutatorContract
+     *
      * @throws \Weebly\Mutate\Exceptions\MutatorNotFoundException
      */
     public function __get($name)
@@ -110,8 +113,8 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
+     * @param  string  $name
+     * @param  mixed  $value
      */
     public function __set($name, $value)
     {
@@ -119,7 +122,7 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $key
+     * @param  string  $key
      * @return bool
      */
     public function __isset($key)
@@ -128,7 +131,7 @@ class MutatorProvider implements ArrayAccess
     }
 
     /**
-     * @param string $key
+     * @param  string  $key
      * @return void
      */
     public function __unset($key)

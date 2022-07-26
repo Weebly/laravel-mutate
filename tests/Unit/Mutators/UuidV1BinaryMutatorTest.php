@@ -8,8 +8,8 @@ use Weebly\Mutate\Exceptions\MutateException;
 class UuidV1BinaryMutatorTest extends TestCase
 {
     /**
-     * @param string $uuid
-     * @param string $expected
+     * @param  string  $uuid
+     * @param  string  $expected
      * @dataProvider validUuidDataProvider
      */
     public function testSerializeValidUuid($uuid, $expected)
@@ -18,9 +18,9 @@ class UuidV1BinaryMutatorTest extends TestCase
     }
 
     /**
-     * @param string $uuid
-     * @param string $exception
-     * @param string $exceptionMessage
+     * @param  string  $uuid
+     * @param  string  $exception
+     * @param  string  $exceptionMessage
      * @dataProvider invalidUuidDataProvider
      */
     public function testSerializeInvalidUuid($uuid, $exception, $exceptionMessage)
@@ -32,8 +32,8 @@ class UuidV1BinaryMutatorTest extends TestCase
     }
 
     /**
-     * @param string $value
-     * @param mixed  $expected
+     * @param  string  $value
+     * @param  mixed  $expected
      * @dataProvider validOrderedUuidDataProvider
      */
     public function testUnserializeAttribute($value, $expected)

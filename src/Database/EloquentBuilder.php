@@ -195,7 +195,7 @@ class EloquentBuilder extends BaseEloquentBuilder
     /**
      * Get the column name without any table prefix.
      *
-     * @param string $column
+     * @param  string  $column
      * @return string
      */
     protected function getUnqualifiedColumnName($column)

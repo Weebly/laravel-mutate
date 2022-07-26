@@ -16,7 +16,7 @@ use Weebly\Mutate\Database\Model;
 class BelongsToManyMutatedTest extends TestCase
 {
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function getEnvironmentSetUp($app)
     {

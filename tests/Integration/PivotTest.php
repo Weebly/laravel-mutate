@@ -13,7 +13,7 @@ use Weebly\Mutate\Database\Model;
 class PivotTest extends TestCase
 {
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function getEnvironmentSetUp($app)
     {

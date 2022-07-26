@@ -5,7 +5,7 @@ namespace Weebly\Mutate\Mutators;
 class IpBinaryMutator implements MutatorContract
 {
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      * @return string
      */
     public function serializeAttribute($value)
@@ -14,7 +14,7 @@ class IpBinaryMutator implements MutatorContract
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      * @return bool|string
      */
     public function unserializeAttribute($value)
