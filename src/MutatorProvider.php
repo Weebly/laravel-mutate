@@ -67,6 +67,7 @@ class MutatorProvider implements ArrayAccess
      * @param  string  $offset
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->exists($offset);
@@ -78,6 +79,7 @@ class MutatorProvider implements ArrayAccess
      *
      * @throws \Weebly\Mutate\Exceptions\MutatorNotFoundException
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -88,6 +90,7 @@ class MutatorProvider implements ArrayAccess
      * @param  mixed  $value
      * @return \Weebly\Mutate\MutatorProvider
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         return $this->set($offset, $value);
@@ -96,6 +99,7 @@ class MutatorProvider implements ArrayAccess
     /**
      * @param  string  $offset
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->mutators[$offset]);

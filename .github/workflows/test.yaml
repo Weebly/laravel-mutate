@@ -65,3 +65,6 @@ jobs:
         run: vendor/bin/phpunit --testsuite Integration
         env:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyze
