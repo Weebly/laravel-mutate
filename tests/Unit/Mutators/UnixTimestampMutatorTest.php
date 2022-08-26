@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
 class UnixTimestampMutatorTest extends TestCase
 {
     /**
-     * @param string $carbon
-     * @param string $expected
+     * @param  string  $carbon
+     * @param  string  $expected
      * @dataProvider carbonProvider
      */
     public function testSerialize($carbon, $expected)
@@ -18,8 +18,8 @@ class UnixTimestampMutatorTest extends TestCase
     }
 
     /**
-     * @param string $expected
-     * @param string $binary
+     * @param  string  $expected
+     * @param  string  $binary
      * @dataProvider carbonProvider
      */
     public function testUnserialize($expected, $timestamp)

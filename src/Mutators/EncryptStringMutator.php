@@ -13,7 +13,7 @@ class EncryptStringMutator implements MutatorContract
     protected $encrypt;
 
     /**
-     * @param \Illuminate\Contracts\Encryption\Encrypter $encrypt
+     * @param  \Illuminate\Contracts\Encryption\Encrypter  $encrypt
      */
     public function __construct(Encrypter $encrypt)
     {

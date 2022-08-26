@@ -7,8 +7,8 @@ use PHPUnit\Framework\TestCase;
 class IpBinaryMutatorTest extends TestCase
 {
     /**
-     * @param string $ip
-     * @param string $expected
+     * @param  string  $ip
+     * @param  string  $expected
      * @dataProvider readableIpDataProvider
      */
     public function testSerializeAttribute($ip, $expected)
@@ -17,8 +17,8 @@ class IpBinaryMutatorTest extends TestCase
     }
 
     /**
-     * @param string $ip
-     * @param string $expected
+     * @param  string  $ip
+     * @param  string  $expected
      * @dataProvider packedIpDataProvider
      */
     public function testUnserializeAttribute($ip, $expected)

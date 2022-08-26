@@ -94,7 +94,7 @@ class BelongsToMany extends EloquentBelongsToMany
     /**
      * Create a new pivot attachment record.
      *
-     * @param  int   $id
+     * @param  int  $id
      * @param  bool  $timed
      * @return array
      */
@@ -198,7 +198,7 @@ class BelongsToMany extends EloquentBelongsToMany
      * Sync the intermediate tables with a list of IDs or collection of models.
      *
      * @param  \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection|array  $ids
-     * @param  bool   $detaching
+     * @param  bool  $detaching
      * @return array
      */
     public function sync($ids, $detaching = true)

@@ -17,8 +17,8 @@ trait HasMutators
     protected $mutatedCache = [];
 
     /**
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      * @return \Illuminate\Foundation\Application|mixed
      */
     public function serializeAttribute($attribute, $value)
@@ -39,9 +39,9 @@ trait HasMutators
     }
 
     /**
-     * @param string $attribute
-     * @param mixed  $value
-     * @param bool $force
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @param  bool  $force
      * @return mixed
      */
     public function unserializeAttribute($attribute, $value, $force = false)
@@ -73,7 +73,7 @@ trait HasMutators
     }
 
     /**
-     * @param string $attribute
+     * @param  string  $attribute
      * @return mixed|null
      */
     public function getMutator($attribute)
@@ -84,7 +84,7 @@ trait HasMutators
     }
 
     /**
-     * @param mixed $attribute
+     * @param  mixed  $attribute
      * @return bool
      */
     public function hasMutator($attribute)

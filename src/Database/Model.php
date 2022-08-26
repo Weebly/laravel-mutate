@@ -11,7 +11,7 @@ abstract class Model extends Eloquent
     use HasMutators;
 
     /**
-     * @param string $key
+     * @param  string  $key
      * @return \Illuminate\Foundation\Application|mixed
      */
     public function getAttribute($key)

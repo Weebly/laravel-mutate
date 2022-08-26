@@ -5,17 +5,16 @@
     "license": "BSD-2-Clause",
     "keywords": ["laravel", "eloquent", "uuid", "encrypt", "database"],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.2 || ^8.0",
         "ramsey/uuid": "~3.0 || ~4.0",
-        "illuminate/database": "^6.0 || ^7.0 || ^8.0",
-        "illuminate/support": "^6.0 || ^7.0 || ^8.0",
-        "illuminate/encryption": "^6.0 || ^7.0 || ^8.0"
+        "laravel/framework": "^6.0 || ^7.0 || ^8.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^8.0",
         "laravel/framework": "8.*",
-        "orchestra/testbench": "^6.0"
+        "orchestra/testbench": "^6.0",
+        "phpstan/phpstan": "^1.8"
     },
     "autoload": {
         "psr-4": {

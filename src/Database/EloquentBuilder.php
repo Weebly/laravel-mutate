@@ -3,6 +3,7 @@
 namespace Weebly\Mutate\Database;
 
 use Closure;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder as BaseEloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\Expression;
@@ -195,7 +196,7 @@ class EloquentBuilder extends BaseEloquentBuilder
     /**
      * Get the column name without any table prefix.
      *
-     * @param string $column
+     * @param  string  $column
      * @return string
      */
     protected function getUnqualifiedColumnName($column)

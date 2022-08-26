@@ -8,8 +8,8 @@ use stdClass;
 class HexBinaryMutatorTest extends TestCase
 {
     /**
-     * @param string $hex
-     * @param string $expected
+     * @param  string  $hex
+     * @param  string  $expected
      * @dataProvider hexProvider
      */
     public function testSerialize($hex, $expected)
@@ -18,8 +18,8 @@ class HexBinaryMutatorTest extends TestCase
     }
 
     /**
-     * @param string $expected
-     * @param string $binary
+     * @param  string  $expected
+     * @param  string  $binary
      * @dataProvider hexProvider
      */
     public function testUnserialize($expected, $binary)
@@ -49,7 +49,7 @@ class HexBinaryMutatorTest extends TestCase
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      * @dataProvider notHexProvider
      */
     public function testWrongFormat($value)
