@@ -114,4 +114,12 @@ abstract class Model extends Eloquent
     {
         return $this->getAttribute($this->getKeyName());
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getKeyForSelectQuery()
+    {
+        return $this->getAttribute($this->getKeyName());
+    }
 }
