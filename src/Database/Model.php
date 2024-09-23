@@ -102,6 +102,16 @@ abstract class Model extends Eloquent
     /**
      * {@inheritdoc}
      */
+    public function refresh()
+    {
+        $this->clearMutatorCache();
+
+        return parent::refresh();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function newEloquentBuilder($query)
     {
         return new EloquentBuilder($query);

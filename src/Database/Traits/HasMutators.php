@@ -91,4 +91,12 @@ trait HasMutators
     {
         return array_key_exists($attribute, $this->mutate);
     }
+
+    /**
+     * @return void
+     */
+    protected function clearMutatorCache()
+    {
+        $this->mutatedCache = [];
+    }
 }
