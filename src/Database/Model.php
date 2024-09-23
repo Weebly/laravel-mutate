@@ -104,7 +104,7 @@ abstract class Model extends Eloquent
      */
     public function refresh()
     {
-        $this->mutatedCache = [];
+        $this->clearMutatorCache();
 
         return parent::refresh();
     }
