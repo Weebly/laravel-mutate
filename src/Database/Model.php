@@ -55,6 +55,30 @@ abstract class Model extends Eloquent
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getOriginal($key = null, $default = null)
+    {
+        $original = parent::getOriginal($key, $default);
+
+        if ($key) {
+            if ($this->hasMutator($key)) {
+                return $this->unserializeAttribute($key, $original);
+            }
+
+            return $original;
+        }
+
+        foreach ($original as $attribute => $value) {
+            if ($this->hasMutator($attribute)) {
+                $original[$attribute] = $this->unserializeAttribute($attribute, $value);
+            }
+        }
+
+        return $original;
+    }
+
+    /**
      * Define a many-to-many relationship.
      *
      * @param  string  $related
