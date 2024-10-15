@@ -52,6 +52,49 @@ class HasMutatorsTest extends TestCase
         $this->assertEquals('serialized_attribute', $model->id);
     }
 
+    public function testGetOriginal()
+    {
+        $uuid = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
+        $mutator = M::mock(MutatorContract::class)
+            ->shouldReceive('get')
+            ->with('test_mutator')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('unserializeAttribute')
+            ->with('unserialized_attribute')
+            ->andReturn('serialized_attribute')
+            ->once()
+            ->getMock();
+
+        app()['mutator'] = $mutator;
+
+        $model = new SampleModel();
+        $original = $model->getOriginal();
+
+        $this->assertIsArray($original);
+        $this->assertEquals('serialized_attribute', $original['id']);
+    }
+
+    public function testGetOriginalProperty()
+    {
+        $uuid = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
+        $mutator = M::mock(MutatorContract::class)
+            ->shouldReceive('get')
+            ->with('test_mutator')
+            ->andReturnSelf()
+            ->once()
+            ->shouldReceive('unserializeAttribute')
+            ->with('unserialized_attribute')
+            ->andReturn('serialized_attribute')
+            ->once()
+            ->getMock();
+
+        app()['mutator'] = $mutator;
+
+        $model = new SampleModel();
+        $this->assertEquals('serialized_attribute', $model->getOriginal('id'));
+    }
+
     public function testGetMutators()
     {
         $this->assertEquals(['id' => 'test_mutator'], (new SampleModel())->getMutators());
