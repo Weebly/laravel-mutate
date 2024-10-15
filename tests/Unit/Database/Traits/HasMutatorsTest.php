@@ -31,7 +31,6 @@ class HasMutatorsTest extends TestCase
 
     public function testUnserializeAttribute()
     {
-        $uuid = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
         $mutator = M::mock(MutatorContract::class)
             ->shouldReceive('get')
             ->with('test_mutator')
@@ -54,7 +53,6 @@ class HasMutatorsTest extends TestCase
 
     public function testGetOriginal()
     {
-        $uuid = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
         $mutator = M::mock(MutatorContract::class)
             ->shouldReceive('get')
             ->with('test_mutator')
@@ -77,7 +75,6 @@ class HasMutatorsTest extends TestCase
 
     public function testGetOriginalProperty()
     {
-        $uuid = 'cf98906e-9074-11e7-9c8e-437b4bab8527';
         $mutator = M::mock(MutatorContract::class)
             ->shouldReceive('get')
             ->with('test_mutator')
