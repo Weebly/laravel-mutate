@@ -147,9 +147,20 @@ class BelongsToMany extends EloquentBelongsToMany
         }
 
         if ($this->related->hasMutator($this->related->getKeyName())) {
+            // Check if already serialized (cache check)
+            if (in_array($value, $this->mutated_values) === true) {
+                return $value;
+            }
+            // Check if value is already binary (not a valid UUID string)
+            // If it's not printable/is binary, assume it's already serialized
+            if (!ctype_print($value)) {
+                return $value;
+            }
             $related = $this->related;
-
-            return $related->serializeAttribute($related->getKeyName(), $value);
+            $serialized = $related->serializeAttribute($related->getKeyName(), $value);
+            // Add to cache
+            $this->mutated_values[] = $serialized;
+            return $serialized;
         }
 
         return $value;
@@ -182,6 +193,10 @@ class BelongsToMany extends EloquentBelongsToMany
             $values = array_map(function ($attribute) use ($related) {
                 if (in_array($attribute, $this->mutated_values) === true) {
                     return $attribute;
+                }
+
+                if (!ctype_print($attribute)) {
+                    return $attribute;  // Already binary, skip serialization
                 }
 
                 $value = $related->serializeAttribute($related->getKeyName(), $attribute);

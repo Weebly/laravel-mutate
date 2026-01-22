@@ -44,7 +44,7 @@ class UuidV1BinaryMutatorTest extends TestCase
     /**
      * @return array
      */
-    public function validUuidDataProvider()
+    public static function validUuidDataProvider()
     {
         return [
             'uuidv1 hex with dashes' => [
@@ -65,7 +65,7 @@ class UuidV1BinaryMutatorTest extends TestCase
     /**
      * @return array
      */
-    public function validOrderedUuidDataProvider()
+    public static function validOrderedUuidDataProvider()
     {
         return [
             'ordered binary uuidv1' => [
@@ -98,7 +98,7 @@ class UuidV1BinaryMutatorTest extends TestCase
     /**
      * @return array
      */
-    public function invalidUuidDataProvider()
+    public static function invalidUuidDataProvider()
     {
         return [
             'uuidv3 hex with dashes' => [

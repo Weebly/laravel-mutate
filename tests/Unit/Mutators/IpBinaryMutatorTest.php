@@ -29,7 +29,7 @@ class IpBinaryMutatorTest extends TestCase
     /**
      * @return array
      */
-    public function readableIpDataProvider()
+    public static function readableIpDataProvider()
     {
         return [
             'valid ipv4' => [
@@ -46,7 +46,7 @@ class IpBinaryMutatorTest extends TestCase
     /**
      * @return array
      */
-    public function packedIpDataProvider()
+    public static function packedIpDataProvider()
     {
         return [
             'valid ipv4' => [

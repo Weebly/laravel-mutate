@@ -21,35 +21,33 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     strategy:
+      fail-fast: false
       matrix:
-        php: [7.2, 7.3, 7.4, 8.0, 8.1]
-        laravel: [6.*, 7.*, 8.*]
+        php: ['8.1', '8.2', '8.3', '8.4']
+        laravel: ['10.*', '11.*', '12.*']
         include:
-          - laravel: 6.*
-            testbench: 4.*
-          - laravel: 7.*
-            testbench: 5.*
-          - laravel: 8.*
-            testbench: 6.*
+          - laravel: '10.*'
+            testbench: '8.*'
+          - laravel: '11.*'
+            testbench: '9.*'
+          - laravel: '12.*'
+            testbench: '10.*'
         exclude:
-          # Laravel 8 only support >= PHP 7.3
-          - laravel: 8.*
-            php: 7.1
-          - laravel: 8.*
-            php: 7.2
-          # Laravel 6 only support PHP <=8.0
-          - laravel: 6.*
-            php: 8.1
-          # Laravel 7 only support PHP <=8.0
-          - laravel: 7.*
-            php: 8.1
-
+          # Laravel 10 supports PHP 8.1-8.3
+          - laravel: '10.*'
+            php: '8.4'
+          # Laravel 11 supports PHP 8.2-8.4
+          - laravel: '11.*'
+            php: '8.1'
+          # Laravel 12 supports PHP 8.2-8.4
+          - laravel: '12.*'
+            php: '8.1'
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

@@ -30,7 +30,7 @@ class HexBinaryMutatorTest extends TestCase
     /**
      * @return \Iterator
      */
-    public function hexProvider()
+    public static function hexProvider()
     {
         $hexes = [
             'Hex string of length 2' => ['e7', hex2bin('e7')],
@@ -61,7 +61,7 @@ class HexBinaryMutatorTest extends TestCase
     /**
      * @return array
      */
-    public function notHexProvider()
+    public static function notHexProvider()
     {
         return [
             'An object cannot be serialized' => [new stdClass],

@@ -36,7 +36,7 @@ class UnixTimestampMutatorTest extends TestCase
     /**
      * @return \Iterator
      */
-    public function carbonProvider()
+    public static function carbonProvider()
     {
         $now = time();
 
