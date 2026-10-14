@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 use Ramsey\Uuid\Uuid;
+use Weebly\Mutate\Database\Eloquent\Relations\BelongsToMany;
 use Weebly\Mutate\Database\Eloquent\Relations\Pivot;
 use Weebly\Mutate\Database\Model;
 
@@ -86,6 +87,48 @@ class PivotTest extends TestCase
 
         $this->assertEquals(0, $first->second_models()->count());
     }
+
+    public function testDetachRespectsWherePivot()
+    {
+        $first = $this->attachTwoPlain();
+
+        $first->second_models_plain()->wherePivot('extra', 'm')->detach();
+
+        $this->assertEquals(['Second null'], $first->second_models_plain()->pluck('name')->all());
+    }
+
+    public function testRelatedModelInheritsParentConnection()
+    {
+        $this->app['config']->set('database.connections.other', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+
+        $first = new FirstModel();
+        $first->setConnection('other');
+        $relation = $first->second_models_plain();
+
+        $this->assertInstanceOf(BelongsToMany::class, $relation);
+        $this->assertEquals('other', $relation->getRelated()->getConnectionName());
+    }
+
+    /**
+     * Attach two second models through the relation without a custom pivot class:
+     * "Second null" with a null extra, "Second m" with extra "m".
+     */
+    private function attachTwoPlain(): FirstModel
+    {
+        $first = (new FirstModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'First']);
+        $secondNull = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second null']);
+        $secondM = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second m']);
+
+        $first->second_models_plain()->attach($secondNull, ['extra' => null]);
+        $first->second_models_plain()->attach($secondM, ['extra' => 'm']);
+        $this->assertEquals(2, $first->second_models_plain()->count());
+
+        return $first;
+    }
 }
 
 class FirstModel extends Model
@@ -127,6 +170,11 @@ class FirstModel extends Model
         return $this->belongsToMany(
             SecondModel::class
         )->using(FirstModelSecondModelPivot::class);
+    }
+
+    public function second_models_plain()
+    {
+        return $this->belongsToMany(SecondModel::class);
     }
 }
 

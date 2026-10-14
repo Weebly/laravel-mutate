@@ -248,6 +248,84 @@ class MutatorTest extends TestCase
         $this->assertEquals(1, count($model));
         $this->assertEquals($id, $model[0]->id);
     }
+
+    public function test_where_not()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $p = TestModel::whereNot('id', $id)->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id2, $p->first()->id);
+    }
+
+    public function test_where_not_closure()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $p = TestModel::whereNot(function ($q) use ($id) {
+            $q->where('id', $id);
+        })->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id2, $p->first()->id);
+    }
+
+    public function test_where_not_empty_array()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $this->assertEquals(1, TestModel::where('id', $id)->whereNot([])->count());
+        $this->assertEquals(2, TestModel::whereNot([])->count());
+    }
+
+    public function test_refresh()
+    {
+        $id = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo']);
+        $this->assertEquals('Foo', $model->location);
+
+        TestModel::where('id', $id)->update(['location' => 'Bar']);
+
+        $this->assertEquals('Bar', $model->refresh()->location);
+    }
+
+    public function test_where_closure_with_global_scope()
+    {
+        $id = Uuid::uuid1()->toString();
+        (new ScopedTestModel())->create(['id' => $id, 'name' => 'Hidden']);
+
+        $this->assertEquals(0, ScopedTestModel::where(function ($q) use ($id) {
+            $q->where('id', $id);
+        })->count());
+
+        $p = ScopedTestModel::withoutGlobalScope('hide')->where(function ($q) use ($id) {
+            $q->where('id', $id);
+        })->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id, $p->first()->id);
+    }
+
+    public function test_where_closure_removing_global_scope()
+    {
+        $id = Uuid::uuid1()->toString();
+        (new ScopedTestModel())->create(['id' => $id, 'name' => 'Hidden']);
+
+        $count = ScopedTestModel::where(function ($q) use ($id) {
+            $q->withoutGlobalScope('hide')->where('id', $id);
+        })->count();
+
+        // Laravel 13 propagates scopes removed inside a nested where to the outer query.
+        $this->assertEquals(version_compare(app()->version(), '13.0.0', '>=') ? 1 : 0, $count);
+    }
+
 }
 
 class TestModel extends Model
@@ -290,6 +368,16 @@ class TestModel extends Model
         $builder->whereIn('id', function ($subquery) {
             $subquery->select('id')->from('test_model')
                 ->whereNull('location');
+        });
+    }
+}
+
+class ScopedTestModel extends TestModel
+{
+    protected static function booted()
+    {
+        static::addGlobalScope('hide', function ($builder) {
+            $builder->where('name', '!=', 'Hidden');
         });
     }
 }
