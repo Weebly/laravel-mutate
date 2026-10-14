@@ -131,6 +131,15 @@ class BelongsToMany extends EloquentBelongsToMany
             call_user_func_array([$query, 'whereIn'], $arguments);
         }
 
+        // Only Laravel 13+ has this property. Keep Laravel's order: betweens, then nulls.
+        foreach ($this->pivotWhereBetweens ?? [] as $arguments) {
+            call_user_func_array([$query, 'whereBetween'], $arguments);
+        }
+
+        foreach ($this->pivotWhereNulls as $arguments) {
+            call_user_func_array([$query, 'whereNull'], $arguments);
+        }
+
         return $query->where($this->foreignPivotKey, $this->getParentKeyValue());
     }
 
