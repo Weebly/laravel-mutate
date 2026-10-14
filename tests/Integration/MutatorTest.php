@@ -368,6 +368,42 @@ class MutatorTest extends TestCase
         $this->assertEquals([$id3], $query->get()->pluck('id')->all());
     }
 
+    public function test_refresh_for_update()
+    {
+        if (! method_exists(TestModel::class, 'refreshForUpdate')) {
+            $this->markTestSkipped('refreshForUpdate() was added in Laravel 13.');
+        }
+
+        $id = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo']);
+        $this->assertEquals('Foo', $model->location);
+
+        TestModel::where('id', $id)->update(['location' => 'Bar']);
+
+        $this->assertEquals('Bar', $model->refreshForUpdate()->location);
+    }
+
+    public function test_refreshes_attributes_after_save()
+    {
+        if (! property_exists(\Illuminate\Database\Eloquent\Model::class, 'refreshes')) {
+            $this->markTestSkipped('Refreshing attributes after save was added in Laravel 13.');
+        }
+
+        $encrypted = app('encrypter')->encrypt('Changed by trigger', false);
+        DB::connection()->getPdo()->exec(
+            "CREATE TRIGGER set_location AFTER UPDATE OF name ON test_model BEGIN
+                UPDATE test_model SET location = '{$encrypted}' WHERE id = NEW.id;
+            END;"
+        );
+
+        $model = (new RefreshingTestModel())->create(['id' => Uuid::uuid1()->toString(), 'name' => 'A chair', 'location' => 'Foo']);
+        $this->assertEquals('Foo', $model->location);
+
+        $model->name = 'A table';
+        $model->save();
+
+        $this->assertEquals('Changed by trigger', $model->location);
+    }
 }
 
 class TestModel extends Model
@@ -422,6 +458,16 @@ class ScopedTestModel extends TestModel
             $builder->where('name', '!=', 'Hidden');
         });
     }
+}
+
+class RefreshingTestModel extends TestModel
+{
+    /**
+     * Columns Laravel 13+ reloads from the database after every save.
+     *
+     * @var array<int, string>
+     */
+    protected array $refreshes = ['location'];
 }
 
 class TimestampedModel extends Model
