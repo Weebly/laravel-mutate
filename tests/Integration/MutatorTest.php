@@ -17,7 +17,7 @@ class MutatorTest extends TestCase
     /**
      * @param  \Illuminate\Foundation\Application  $app
      */
-    protected function getEnvironmentSetUp($app)
+    protected function defineEnvironment($app)
     {
         $app['config']->set('app.key', 'base64:+oDiXVEBRapl1N6RWgVx/xdzJ4aXgSAsD6QbAYmNE8A=');
         $app['config']->set('app.cipher', 'AES-256-CBC');
