@@ -66,6 +66,30 @@ class EloquentBuilder extends BaseEloquentBuilder
     /**
      * {@inheritdoc}
      */
+    public function whereNot($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        // Laravel 13 sends arrays straight to the base query builder, which would skip
+        // mutating the values. An empty array is left to the parent, because an empty
+        // nested where would make where() pop the previous clause.
+        if (is_array($column) && $column !== []) {
+            // Same handling of an array of wheres as Query\Builder::addArrayOfWheres()
+            return $this->where(function ($query) use ($column, $boolean) {
+                foreach ($column as $key => $value) {
+                    if (is_numeric($key) && is_array($value)) {
+                        $query->where(...array_values($value), boolean: $boolean);
+                    } else {
+                        $query->where($key, '=', $value, $boolean);
+                    }
+                }
+            }, null, null, $boolean.' not');
+        }
+
+        return parent::whereNot($column, $operator, $value, $boolean);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function whereKey($id)
     {
         if (is_array($id) || $id instanceof Arrayable) {

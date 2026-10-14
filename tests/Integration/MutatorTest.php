@@ -326,6 +326,48 @@ class MutatorTest extends TestCase
         $this->assertEquals(version_compare(app()->version(), '13.0.0', '>=') ? 1 : 0, $count);
     }
 
+    public function test_where_not_array()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $p = TestModel::whereNot(['id' => $id])->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id2, $p->first()->id);
+    }
+
+    public function test_where_not_array_of_conditions()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $p = TestModel::whereNot([['id', '=', $id]])->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id2, $p->first()->id);
+    }
+
+    public function test_or_where_not_array()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        $id3 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+        (new TestModel())->create(['id' => $id3, 'name' => 'A lamp']);
+
+        $query = TestModel::where('name', 'A lamp')->orWhereNot(['id' => $id, 'name' => 'A table']);
+
+        $this->assertEquals(
+            'select * from "test_model" where "name" = ? or not ("id" = ? or "name" = ?)',
+            $query->toSql()
+        );
+        $this->assertEquals([$id3], $query->get()->pluck('id')->all());
+    }
+
 }
 
 class TestModel extends Model
