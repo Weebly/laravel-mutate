@@ -69,6 +69,10 @@ jobs:
           tools: composer:v2
 
       - name: Install PHP dependencies
+        # Composer 2.9+ refuses versions with security advisories, and every
+        # Laravel 10 and 11 release has one. CI still tests the supported range.
+        env:
+          COMPOSER_NO_SECURITY_BLOCKING: 1
         run: |
           composer require --dev "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --prefer-stable --no-interaction --no-progress
