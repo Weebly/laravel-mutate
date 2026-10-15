@@ -3,6 +3,7 @@
 namespace Weebly\Mutate;
 
 use DB;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
@@ -111,6 +112,35 @@ class PivotTest extends TestCase
 
         $this->assertInstanceOf(BelongsToMany::class, $relation);
         $this->assertEquals('other', $relation->getRelated()->getConnectionName());
+    }
+
+    public function testDetachRespectsWherePivotBetween()
+    {
+        if (! property_exists(EloquentBelongsToMany::class, 'pivotWhereBetweens')) {
+            $this->markTestSkipped('Pivot queries apply wherePivotBetween() from Laravel 13.');
+        }
+
+        $first = $this->attachTwoModelsWithoutPivotClass();
+
+        $first->second_models_without_pivot_class()->wherePivotBetween('extra', ['a', 'z'])->detach();
+
+        $this->assertEquals(['Second null'], $first->second_models_without_pivot_class()->pluck('name')->all());
+    }
+
+    public function testUpdateExistingPivotRespectsWherePivotBetween()
+    {
+        if (! property_exists(EloquentBelongsToMany::class, 'pivotWhereBetweens')) {
+            $this->markTestSkipped('Pivot queries apply wherePivotBetween() from Laravel 13.');
+        }
+
+        $first = $this->attachTwoModelsWithoutPivotClass();
+        $secondNull = SecondModel::where('name', 'Second null')->first();
+
+        $updated = $first->second_models_without_pivot_class()->wherePivotBetween('extra', ['a', 'z'])
+            ->updateExistingPivot($secondNull, ['extra' => 'changed']);
+
+        $this->assertEquals(0, $updated);
+        $this->assertEquals(1, DB::table('first_model_second_model')->whereNull('extra')->count());
     }
 
     private function attachTwoModelsWithoutPivotClass(): FirstModel
