@@ -131,6 +131,10 @@ class BelongsToMany extends EloquentBelongsToMany
             call_user_func_array([$query, 'whereIn'], $arguments);
         }
 
+        foreach ($this->pivotWhereNulls as $arguments) {
+            call_user_func_array([$query, 'whereNull'], $arguments);
+        }
+
         return $query->where($this->foreignPivotKey, $this->getParentKeyValue());
     }
 

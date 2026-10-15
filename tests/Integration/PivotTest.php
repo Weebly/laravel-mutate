@@ -86,6 +86,40 @@ class PivotTest extends TestCase
 
         $this->assertEquals(0, $first->second_models()->count());
     }
+
+    public function testDetachRespectsWherePivotNull()
+    {
+        $first = $this->attachTwoModelsWithoutPivotClass();
+
+        $first->second_models_without_pivot_class()->wherePivotNull('extra')->detach();
+
+        $this->assertEquals(['Second m'], $first->second_models_without_pivot_class()->pluck('name')->all());
+    }
+
+    public function testUpdateExistingPivotRespectsWherePivotNull()
+    {
+        $first = $this->attachTwoModelsWithoutPivotClass();
+        $secondM = SecondModel::where('name', 'Second m')->first();
+
+        $updated = $first->second_models_without_pivot_class()->wherePivotNull('extra')
+            ->updateExistingPivot($secondM, ['extra' => 'changed']);
+
+        $this->assertEquals(0, $updated);
+        $this->assertEquals(1, DB::table('first_model_second_model')->where('extra', 'm')->count());
+    }
+
+    private function attachTwoModelsWithoutPivotClass(): FirstModel
+    {
+        $first = (new FirstModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'First']);
+        $secondNull = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second null']);
+        $secondM = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second m']);
+
+        $first->second_models_without_pivot_class()->attach($secondNull, ['extra' => null]);
+        $first->second_models_without_pivot_class()->attach($secondM, ['extra' => 'm']);
+        $this->assertEquals(2, $first->second_models_without_pivot_class()->count());
+
+        return $first;
+    }
 }
 
 class FirstModel extends Model
@@ -127,6 +161,11 @@ class FirstModel extends Model
         return $this->belongsToMany(
             SecondModel::class
         )->using(FirstModelSecondModelPivot::class);
+    }
+
+    public function second_models_without_pivot_class()
+    {
+        return $this->belongsToMany(SecondModel::class);
     }
 }
 
