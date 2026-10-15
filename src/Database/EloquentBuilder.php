@@ -66,6 +66,26 @@ class EloquentBuilder extends BaseEloquentBuilder
     /**
      * {@inheritdoc}
      */
+    public function whereNot($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        if (is_array($column) && $column !== []) {
+            return $this->where(function ($query) use ($column, $boolean) {
+                foreach ($column as $key => $value) {
+                    if (is_numeric($key) && is_array($value)) {
+                        $query->where(...array_values($value), boolean: $boolean);
+                    } else {
+                        $query->where($key, '=', $value, $boolean);
+                    }
+                }
+            }, null, null, $boolean.' not');
+        }
+
+        return parent::whereNot($column, $operator, $value, $boolean);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function whereKey($id)
     {
         if (is_array($id) || $id instanceof Arrayable) {

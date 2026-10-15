@@ -126,11 +126,11 @@ abstract class Model extends Eloquent
     /**
      * {@inheritdoc}
      */
-    public function refresh()
+    public function setRawAttributes(array $attributes, $sync = false)
     {
         $this->clearMutatorCache();
 
-        return parent::refresh();
+        return parent::setRawAttributes($attributes, $sync);
     }
 
     /**

@@ -3,10 +3,12 @@
 namespace Weebly\Mutate;
 
 use DB;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 use Ramsey\Uuid\Uuid;
+use Weebly\Mutate\Database\Eloquent\Relations\BelongsToMany;
 use Weebly\Mutate\Database\Eloquent\Relations\Pivot;
 use Weebly\Mutate\Database\Model;
 
@@ -15,7 +17,7 @@ class PivotTest extends TestCase
     /**
      * @param  \Illuminate\Foundation\Application  $app
      */
-    protected function getEnvironmentSetUp($app)
+    protected function defineEnvironment($app)
     {
         $app['config']->set('app.key', 'base64:+oDiXVEBRapl1N6RWgVx/xdzJ4aXgSAsD6QbAYmNE8A=');
         $app['config']->set('app.cipher', 'AES-256-CBC');
@@ -86,6 +88,73 @@ class PivotTest extends TestCase
 
         $this->assertEquals(0, $first->second_models()->count());
     }
+
+    public function testDetachRespectsWherePivot()
+    {
+        $first = $this->attachTwoModelsWithoutPivotClass();
+
+        $first->second_models_without_pivot_class()->wherePivot('extra', 'm')->detach();
+
+        $this->assertEquals(['Second null'], $first->second_models_without_pivot_class()->pluck('name')->all());
+    }
+
+    public function testRelatedModelInheritsParentConnection()
+    {
+        $this->app['config']->set('database.connections.other', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+
+        $first = new FirstModel();
+        $first->setConnection('other');
+        $relation = $first->second_models_without_pivot_class();
+
+        $this->assertInstanceOf(BelongsToMany::class, $relation);
+        $this->assertEquals('other', $relation->getRelated()->getConnectionName());
+    }
+
+    public function testDetachRespectsWherePivotBetween()
+    {
+        if (! property_exists(EloquentBelongsToMany::class, 'pivotWhereBetweens')) {
+            $this->markTestSkipped('Pivot queries apply wherePivotBetween() from Laravel 13.');
+        }
+
+        $first = $this->attachTwoModelsWithoutPivotClass();
+
+        $first->second_models_without_pivot_class()->wherePivotBetween('extra', ['a', 'z'])->detach();
+
+        $this->assertEquals(['Second null'], $first->second_models_without_pivot_class()->pluck('name')->all());
+    }
+
+    public function testUpdateExistingPivotRespectsWherePivotBetween()
+    {
+        if (! property_exists(EloquentBelongsToMany::class, 'pivotWhereBetweens')) {
+            $this->markTestSkipped('Pivot queries apply wherePivotBetween() from Laravel 13.');
+        }
+
+        $first = $this->attachTwoModelsWithoutPivotClass();
+        $secondNull = SecondModel::where('name', 'Second null')->first();
+
+        $updated = $first->second_models_without_pivot_class()->wherePivotBetween('extra', ['a', 'z'])
+            ->updateExistingPivot($secondNull, ['extra' => 'changed']);
+
+        $this->assertEquals(0, $updated);
+        $this->assertEquals(1, DB::table('first_model_second_model')->whereNull('extra')->count());
+    }
+
+    private function attachTwoModelsWithoutPivotClass(): FirstModel
+    {
+        $first = (new FirstModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'First']);
+        $secondNull = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second null']);
+        $secondM = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second m']);
+
+        $first->second_models_without_pivot_class()->attach($secondNull, ['extra' => null]);
+        $first->second_models_without_pivot_class()->attach($secondM, ['extra' => 'm']);
+        $this->assertEquals(2, $first->second_models_without_pivot_class()->count());
+
+        return $first;
+    }
 }
 
 class FirstModel extends Model
@@ -127,6 +196,11 @@ class FirstModel extends Model
         return $this->belongsToMany(
             SecondModel::class
         )->using(FirstModelSecondModelPivot::class);
+    }
+
+    public function second_models_without_pivot_class()
+    {
+        return $this->belongsToMany(SecondModel::class);
     }
 }
 

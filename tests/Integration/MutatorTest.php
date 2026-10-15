@@ -17,7 +17,7 @@ class MutatorTest extends TestCase
     /**
      * @param  \Illuminate\Foundation\Application  $app
      */
-    protected function getEnvironmentSetUp($app)
+    protected function defineEnvironment($app)
     {
         $app['config']->set('app.key', 'base64:+oDiXVEBRapl1N6RWgVx/xdzJ4aXgSAsD6QbAYmNE8A=');
         $app['config']->set('app.cipher', 'AES-256-CBC');
@@ -248,6 +248,162 @@ class MutatorTest extends TestCase
         $this->assertEquals(1, count($model));
         $this->assertEquals($id, $model[0]->id);
     }
+
+    public function test_where_not()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $p = TestModel::whereNot('id', $id)->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id2, $p->first()->id);
+    }
+
+    public function test_where_not_closure()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $p = TestModel::whereNot(function ($q) use ($id) {
+            $q->where('id', $id);
+        })->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id2, $p->first()->id);
+    }
+
+    public function test_where_not_empty_array()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $this->assertEquals(1, TestModel::where('id', $id)->whereNot([])->count());
+        $this->assertEquals(2, TestModel::whereNot([])->count());
+    }
+
+    public function test_refresh()
+    {
+        $id = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo']);
+        $this->assertEquals('Foo', $model->location);
+
+        TestModel::where('id', $id)->update(['location' => 'Bar']);
+
+        $this->assertEquals('Bar', $model->refresh()->location);
+    }
+
+    public function test_where_closure_with_global_scope()
+    {
+        $id = Uuid::uuid1()->toString();
+        (new ScopedTestModel())->create(['id' => $id, 'name' => 'Hidden']);
+
+        $this->assertEquals(0, ScopedTestModel::where(function ($q) use ($id) {
+            $q->where('id', $id);
+        })->count());
+
+        $p = ScopedTestModel::withoutGlobalScope('hide')->where(function ($q) use ($id) {
+            $q->where('id', $id);
+        })->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id, $p->first()->id);
+    }
+
+    public function test_where_closure_removing_global_scope()
+    {
+        $id = Uuid::uuid1()->toString();
+        (new ScopedTestModel())->create(['id' => $id, 'name' => 'Hidden']);
+
+        $count = ScopedTestModel::where(function ($q) use ($id) {
+            $q->withoutGlobalScope('hide')->where('id', $id);
+        })->count();
+
+        // Laravel 13 propagates scopes removed inside a nested where to the outer query.
+        $this->assertEquals(version_compare(app()->version(), '13.0.0', '>=') ? 1 : 0, $count);
+    }
+
+    public function test_where_not_array()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $p = TestModel::whereNot(['id' => $id])->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id2, $p->first()->id);
+    }
+
+    public function test_where_not_array_of_conditions()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+
+        $p = TestModel::whereNot([['id', '=', $id]])->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id2, $p->first()->id);
+    }
+
+    public function test_or_where_not_array()
+    {
+        $id = Uuid::uuid1()->toString();
+        $id2 = Uuid::uuid1()->toString();
+        $id3 = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A chair']);
+        (new TestModel())->create(['id' => $id2, 'name' => 'A table']);
+        (new TestModel())->create(['id' => $id3, 'name' => 'A lamp']);
+
+        $query = TestModel::where('name', 'A lamp')->orWhereNot(['id' => $id, 'name' => 'A table']);
+
+        $this->assertEquals(
+            'select * from "test_model" where "name" = ? or not ("id" = ? or "name" = ?)',
+            $query->toSql()
+        );
+        $this->assertEquals([$id3], $query->get()->pluck('id')->all());
+    }
+
+    public function test_refresh_for_update()
+    {
+        if (! method_exists(TestModel::class, 'refreshForUpdate')) {
+            $this->markTestSkipped('refreshForUpdate() was added in Laravel 13.');
+        }
+
+        $id = Uuid::uuid1()->toString();
+        $model = (new TestModel())->create(['id' => $id, 'name' => 'A chair', 'location' => 'Foo']);
+        $this->assertEquals('Foo', $model->location);
+
+        TestModel::where('id', $id)->update(['location' => 'Bar']);
+
+        $this->assertEquals('Bar', $model->refreshForUpdate()->location);
+    }
+
+    public function test_refreshes_attributes_after_save()
+    {
+        if (! property_exists(\Illuminate\Database\Eloquent\Model::class, 'refreshes')) {
+            $this->markTestSkipped('Refreshing attributes after save was added in Laravel 13.');
+        }
+
+        $encrypted = app('encrypter')->encrypt('Changed by trigger', false);
+        DB::connection()->getPdo()->exec(
+            "CREATE TRIGGER set_location AFTER UPDATE OF name ON test_model BEGIN
+                UPDATE test_model SET location = '{$encrypted}' WHERE id = NEW.id;
+            END;"
+        );
+
+        $model = (new RefreshingTestModel())->create(['id' => Uuid::uuid1()->toString(), 'name' => 'A chair', 'location' => 'Foo']);
+        $this->assertEquals('Foo', $model->location);
+
+        $model->name = 'A table';
+        $model->save();
+
+        $this->assertEquals('Changed by trigger', $model->location);
+    }
 }
 
 class TestModel extends Model
@@ -292,6 +448,21 @@ class TestModel extends Model
                 ->whereNull('location');
         });
     }
+}
+
+class ScopedTestModel extends TestModel
+{
+    protected static function booted()
+    {
+        static::addGlobalScope('hide', function ($builder) {
+            $builder->where('name', '!=', 'Hidden');
+        });
+    }
+}
+
+class RefreshingTestModel extends TestModel
+{
+    protected array $refreshes = ['location'];
 }
 
 class TimestampedModel extends Model
