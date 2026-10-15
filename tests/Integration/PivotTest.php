@@ -3,6 +3,7 @@
 namespace Weebly\Mutate;
 
 use DB;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany as EloquentBelongsToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
@@ -86,6 +87,73 @@ class PivotTest extends TestCase
 
         $this->assertEquals(0, $first->second_models()->count());
     }
+
+    public function testDetachRespectsWherePivotNull()
+    {
+        $first = $this->attachTwoPlain();
+
+        $first->second_models_plain()->wherePivotNull('extra')->detach();
+
+        $this->assertEquals(['Second m'], $first->second_models_plain()->pluck('name')->all());
+    }
+
+    public function testDetachRespectsWherePivotBetween()
+    {
+        if (! property_exists(EloquentBelongsToMany::class, 'pivotWhereBetweens')) {
+            $this->markTestSkipped('Pivot queries apply wherePivotBetween() from Laravel 13.');
+        }
+
+        $first = $this->attachTwoPlain();
+
+        $first->second_models_plain()->wherePivotBetween('extra', ['a', 'z'])->detach();
+
+        $this->assertEquals(['Second null'], $first->second_models_plain()->pluck('name')->all());
+    }
+
+    public function testPivotQueryConstraintOrder()
+    {
+        if (! property_exists(EloquentBelongsToMany::class, 'pivotWhereBetweens')) {
+            $this->markTestSkipped('Pivot queries apply wherePivotBetween() from Laravel 13.');
+        }
+
+        $query = (new FirstModel(['id' => (string) Uuid::uuid1()->getHex()]))->second_models_plain()
+            ->wherePivotBetween('extra', ['a', 'z'])
+            ->orWherePivotNull('extra')
+            ->newPivotQuery();
+
+        // Same order as Laravel: betweens, then nulls, then the parent key.
+        $this->assertEquals(['between', 'Null', 'Basic'], array_column($query->wheres, 'type'));
+        $this->assertEquals(['and', 'or', 'and'], array_column($query->wheres, 'boolean'));
+    }
+
+    public function testUpdateExistingPivotRespectsWherePivotNull()
+    {
+        $first = $this->attachTwoPlain();
+        $secondM = SecondModel::where('name', 'Second m')->first();
+
+        $updated = $first->second_models_plain()->wherePivotNull('extra')
+            ->updateExistingPivot($secondM, ['extra' => 'changed']);
+
+        $this->assertEquals(0, $updated);
+        $this->assertEquals(1, DB::table('first_model_second_model')->where('extra', 'm')->count());
+    }
+
+    /**
+     * Attach two second models through the relation without a custom pivot class:
+     * "Second null" with a null extra, "Second m" with extra "m".
+     */
+    private function attachTwoPlain(): FirstModel
+    {
+        $first = (new FirstModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'First']);
+        $secondNull = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second null']);
+        $secondM = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second m']);
+
+        $first->second_models_plain()->attach($secondNull, ['extra' => null]);
+        $first->second_models_plain()->attach($secondM, ['extra' => 'm']);
+        $this->assertEquals(2, $first->second_models_plain()->count());
+
+        return $first;
+    }
 }
 
 class FirstModel extends Model
@@ -127,6 +195,11 @@ class FirstModel extends Model
         return $this->belongsToMany(
             SecondModel::class
         )->using(FirstModelSecondModelPivot::class);
+    }
+
+    public function second_models_plain()
+    {
+        return $this->belongsToMany(SecondModel::class);
     }
 }
 
