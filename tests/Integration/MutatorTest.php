@@ -462,11 +462,6 @@ class ScopedTestModel extends TestModel
 
 class RefreshingTestModel extends TestModel
 {
-    /**
-     * Columns Laravel 13+ reloads from the database after every save.
-     *
-     * @var array<int, string>
-     */
     protected array $refreshes = ['location'];
 }
 

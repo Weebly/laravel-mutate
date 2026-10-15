@@ -124,9 +124,6 @@ abstract class Model extends Eloquent
     }
 
     /**
-     * Every reload of attributes from the database ends here: refresh(), and on
-     * Laravel 13 also refreshForUpdate() and the attributes refreshed after save.
-     *
      * {@inheritdoc}
      */
     public function setRawAttributes(array $attributes, $sync = false)

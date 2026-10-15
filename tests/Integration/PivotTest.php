@@ -90,11 +90,11 @@ class PivotTest extends TestCase
 
     public function testDetachRespectsWherePivot()
     {
-        $first = $this->attachTwoPlain();
+        $first = $this->attachTwoModelsWithoutPivotClass();
 
-        $first->second_models_plain()->wherePivot('extra', 'm')->detach();
+        $first->second_models_without_pivot_class()->wherePivot('extra', 'm')->detach();
 
-        $this->assertEquals(['Second null'], $first->second_models_plain()->pluck('name')->all());
+        $this->assertEquals(['Second null'], $first->second_models_without_pivot_class()->pluck('name')->all());
     }
 
     public function testRelatedModelInheritsParentConnection()
@@ -107,25 +107,21 @@ class PivotTest extends TestCase
 
         $first = new FirstModel();
         $first->setConnection('other');
-        $relation = $first->second_models_plain();
+        $relation = $first->second_models_without_pivot_class();
 
         $this->assertInstanceOf(BelongsToMany::class, $relation);
         $this->assertEquals('other', $relation->getRelated()->getConnectionName());
     }
 
-    /**
-     * Attach two second models through the relation without a custom pivot class:
-     * "Second null" with a null extra, "Second m" with extra "m".
-     */
-    private function attachTwoPlain(): FirstModel
+    private function attachTwoModelsWithoutPivotClass(): FirstModel
     {
         $first = (new FirstModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'First']);
         $secondNull = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second null']);
         $secondM = (new SecondModel())->create(['id' => (string) Uuid::uuid1()->getHex(), 'name' => 'Second m']);
 
-        $first->second_models_plain()->attach($secondNull, ['extra' => null]);
-        $first->second_models_plain()->attach($secondM, ['extra' => 'm']);
-        $this->assertEquals(2, $first->second_models_plain()->count());
+        $first->second_models_without_pivot_class()->attach($secondNull, ['extra' => null]);
+        $first->second_models_without_pivot_class()->attach($secondM, ['extra' => 'm']);
+        $this->assertEquals(2, $first->second_models_without_pivot_class()->count());
 
         return $first;
     }
@@ -172,7 +168,7 @@ class FirstModel extends Model
         )->using(FirstModelSecondModelPivot::class);
     }
 
-    public function second_models_plain()
+    public function second_models_without_pivot_class()
     {
         return $this->belongsToMany(SecondModel::class);
     }
