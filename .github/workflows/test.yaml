@@ -26,10 +26,14 @@ jobs:
         php: ['8.1', '8.2', '8.3', '8.4']
         laravel: ['10.*', '11.*', '12.*', '13.*']
         include:
+          # Every Laravel 10 and 11 release has a security advisory, and Composer
+          # refuses to install those by default. Only these legs skip the check.
           - laravel: '10.*'
             testbench: '8.*'
+            composer-no-blocking: 1
           - laravel: '11.*'
             testbench: '9.*'
+            composer-no-blocking: 1
           - laravel: '12.*'
             testbench: '10.*'
           - laravel: '13.*'
@@ -69,10 +73,8 @@ jobs:
           tools: composer:v2
 
       - name: Install PHP dependencies
-        # Composer 2.9+ refuses versions with security advisories, and every
-        # Laravel 10 and 11 release has one. CI still tests the supported range.
         env:
-          COMPOSER_NO_SECURITY_BLOCKING: 1
+          COMPOSER_NO_BLOCKING: ${{ matrix.composer-no-blocking }}
         run: |
           composer require --dev "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --prefer-stable --no-interaction --no-progress
