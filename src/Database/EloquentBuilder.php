@@ -30,9 +30,9 @@ class EloquentBuilder extends BaseEloquentBuilder
         }
 
         // Resolve the 2-arg shorthand here, or values like "IS" get parsed as operators
-        [$value, $operator] = $this->query->prepareValueAndOperator(
-            $value, $operator, func_num_args() === 2
-        );
+        if (func_num_args() === 2) {
+            [$value, $operator] = [$operator, '='];
+        }
 
         $bindings = $this->query->bindings;
 
