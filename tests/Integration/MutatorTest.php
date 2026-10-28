@@ -109,6 +109,18 @@ class MutatorTest extends TestCase
         $this->assertEquals($id, $p->first()->id);
     }
 
+    public function test_where_not_with_operator_like_value()
+    {
+        (new TestModel())->create(['id' => Uuid::uuid1()->toString(), 'name' => 'IS']);
+
+        $query = TestModel::whereNot('name', 'IS');
+        $expected = DB::table('test_model')->whereNot('name', 'IS');
+
+        $this->assertEquals($expected->toSql(), $query->toSql());
+        $this->assertEquals($expected->getBindings(), $query->getBindings());
+        $this->assertEquals($expected->count(), $query->get()->count());
+    }
+
     public function test_where_not_null_shorthand()
     {
         $id = Uuid::uuid1()->toString();
