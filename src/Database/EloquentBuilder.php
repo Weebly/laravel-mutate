@@ -29,8 +29,7 @@ class EloquentBuilder extends BaseEloquentBuilder
             return $this;
         }
 
-        // Resolve the "where($column, $value)" shorthand here, since forwarding all four arguments
-        // would make the parent treat a value that looks like an operator (e.g. "IS") as one.
+        // Resolve the 2-arg shorthand here, or values like "IS" get parsed as operators
         [$value, $operator] = $this->query->prepareValueAndOperator(
             $value, $operator, func_num_args() === 2
         );
@@ -42,7 +41,7 @@ class EloquentBuilder extends BaseEloquentBuilder
         // Remove the last item of the array
         $where = array_pop($this->query->wheres);
 
-        // Nested, Null, NotNull, etc. have no value to mutate
+        // Skip clauses without a value (Nested, Null, NotNull, ...)
         if (! array_key_exists('value', $where)) {
             // Add where statement back and return
             $this->query->wheres[] = $where;
