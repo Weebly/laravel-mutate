@@ -23,11 +23,18 @@ class EloquentBuilder extends BaseEloquentBuilder
     {
         if (is_array($column)) {
             foreach ($column as $name => $value) {
-                $this->where($name, $value);
+                $this->where($name, '=', $value);
             }
 
             return $this;
         }
+
+        // Resolve the "where($column, $value)" shorthand here, since forwarding all four arguments
+        // would make the parent treat a value that looks like an operator (e.g. "IS") as one.
+        [$value, $operator] = $this->query->prepareValueAndOperator(
+            $value, $operator, func_num_args() === 2
+        );
+
         $bindings = $this->query->bindings;
 
         parent::where($column, $operator, $value, $boolean);
@@ -35,7 +42,8 @@ class EloquentBuilder extends BaseEloquentBuilder
         // Remove the last item of the array
         $where = array_pop($this->query->wheres);
 
-        if ($where['type'] === 'Nested' || $where['type'] === 'Null') {
+        // Nested, Null, NotNull, etc. have no value to mutate
+        if (! array_key_exists('value', $where)) {
             // Add where statement back and return
             $this->query->wheres[] = $where;
 
