@@ -23,19 +23,21 @@ class EloquentBuilder extends BaseEloquentBuilder
     {
         if (is_array($column)) {
             foreach ($column as $name => $value) {
-                $this->where($name, $value);
+                $this->where($name, '=', $value);
             }
 
             return $this;
         }
+
         $bindings = $this->query->bindings;
 
-        parent::where($column, $operator, $value, $boolean);
+        parent::where(...func_get_args());
 
         // Remove the last item of the array
         $where = array_pop($this->query->wheres);
 
-        if ($where['type'] === 'Nested' || $where['type'] === 'Null') {
+        // Skip clauses without a value (Nested, Null, NotNull, ...)
+        if (! array_key_exists('value', $where)) {
             // Add where statement back and return
             $this->query->wheres[] = $where;
 

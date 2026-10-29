@@ -80,6 +80,59 @@ class MutatorTest extends TestCase
         $this->assertEquals($id, $p->id);
     }
 
+    public function test_where_with_operator_like_value()
+    {
+        foreach (['IS', 'is', 'like', '='] as $value) {
+            $id = Uuid::uuid1()->toString();
+            (new TestModel())->create(['id' => $id, 'name' => $value]);
+            (new TestModel())->create(['id' => Uuid::uuid1()->toString(), 'name' => 'A chair']);
+
+            $p = TestModel::where('name', $value)->get();
+            $this->assertEquals(1, $p->count(), "Failed asserting where() matched name '$value'");
+            $this->assertEquals($id, $p->first()->id);
+
+            TestModel::query()->delete();
+        }
+    }
+
+    public function test_array_of_wheres_with_operator_like_value()
+    {
+        $id = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'IS']);
+        (new TestModel())->create(['id' => Uuid::uuid1()->toString(), 'name' => 'A table']);
+
+        $p = TestModel::where([
+            'id' => $id,
+            'name' => 'IS',
+        ])->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id, $p->first()->id);
+    }
+
+    public function test_where_closure_with_null_shorthand()
+    {
+        $id = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A table']);
+        (new TestModel())->create(['id' => Uuid::uuid1()->toString(), 'name' => 'A chair']);
+
+        $p = TestModel::where(function ($query) {
+            $query->where('name', 'A table');
+        }, null)->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id, $p->first()->id);
+    }
+
+    public function test_where_not_null_shorthand()
+    {
+        $id = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A table', 'location' => 'One']);
+        (new TestModel())->create(['id' => Uuid::uuid1()->toString(), 'name' => 'A chair']);
+
+        $p = TestModel::where('location', '!=', null)->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id, $p->first()->id);
+    }
+
     public function test_find()
     {
         $id = Uuid::uuid1()->toString();
