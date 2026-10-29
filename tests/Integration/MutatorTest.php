@@ -109,6 +109,19 @@ class MutatorTest extends TestCase
         $this->assertEquals($id, $p->first()->id);
     }
 
+    public function test_where_closure_with_null_shorthand()
+    {
+        $id = Uuid::uuid1()->toString();
+        (new TestModel())->create(['id' => $id, 'name' => 'A table']);
+        (new TestModel())->create(['id' => Uuid::uuid1()->toString(), 'name' => 'A chair']);
+
+        $p = TestModel::where(function ($query) {
+            $query->where('name', 'A table');
+        }, null)->get();
+        $this->assertEquals(1, $p->count());
+        $this->assertEquals($id, $p->first()->id);
+    }
+
     public function test_where_not_null_shorthand()
     {
         $id = Uuid::uuid1()->toString();
