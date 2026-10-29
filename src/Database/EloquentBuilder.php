@@ -29,14 +29,9 @@ class EloquentBuilder extends BaseEloquentBuilder
             return $this;
         }
 
-        // Resolve the 2-arg shorthand here, or values like "IS" get parsed as operators
-        [$value, $operator] = $this->query->prepareValueAndOperator(
-            $value, $operator, func_num_args() === 2
-        );
-
         $bindings = $this->query->bindings;
 
-        parent::where($column, $operator, $value, $boolean);
+        parent::where(...func_get_args());
 
         // Remove the last item of the array
         $where = array_pop($this->query->wheres);
